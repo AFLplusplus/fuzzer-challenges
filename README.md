@@ -4,12 +4,12 @@ Test a fuzzer what fuzzing challenges it can solve.
 
 ## Setup
 
-The fuzzer and necessary compilers must be in the path: `afl-clang-fast`, `afl-fuzz`, `hfuzz-clang`, `honggfuzz`, `clang`.
+The fuzzers and necessary compilers must be in the path: `afl-clang-fast`, `afl-fuzz`, `hfuzz-clang`, `honggfuzz`, `clang`.
 
 ## Running
 
 ```
-./test.sh
+./test.sh TARGET
 ```
 
 `TARGET` can be (currently) one of:
