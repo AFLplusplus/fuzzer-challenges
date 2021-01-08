@@ -15,25 +15,27 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
   double *p64, lesser, greater;
   uint64_t i;
 
-  if (len < 32) bail("too short", 0);
+  if (len < 40) bail("too short", 0);
   
   // easy
-  for (i = 0; i < 4; i++) {
+  for (i = 0; i < 2; i++) {
     p64 = (double*)(buf + i*8);
-    lesser = 1000000.0 + 10011.0*i;
-    greater = 1000010.0 + 10011.0*i;
+    lesser = 1000000.1 + 10011.0*i + i;
+    greater = 1000009.9 + 10011.0*i - i;
     if (*p64 < lesser || *p64 > greater) bail("wrong double", (i * 8));
   }
 
-  if (len < 64) bail("too short", 0);
-
-  // hard
-  for (i = 4; i < 8; i++) {
+  // harder
+  for (i = 2; i < 4; i++) {
     p64 = (double*)(buf + i*8);
-    lesser = 300001.0 + 31050.0*i;
-    greater = 300005.0 + 31050.0*i;
+    lesser = 300000.1 + 31050.0*i + i;
+    greater = 300009.9 + 31050.0*i - i;
     if (*p64 <= lesser || *p64 >= greater) bail("wrong double", (i * 8));
   }
+
+  // exact
+  p64 = (double*)(buf + 32);
+  if (*p64 != 3.141592653589793116) bail("wrong double", 32);
 
   abort();
 

@@ -39,7 +39,28 @@ On success the time to solve is displayed (note that afl++ has a longer startup 
 
 On failure the the generated corpus files are displayed (so you can see how many finds there were). There is also an output log called `TESTCASE.log`.
 
+## Test as of 8th January 2021
+
+All from current repository state.
+Solve time: 20 seconds (to give libfuzzer a better chance)
+
+|testcase|afl++_cmplog_variant|afl++_cmplog_variant2|afl++_dev|afl++_stable|honggfuzz-2.3|libfuzzer-12|
+|:------:|:------------------:|:-------------------:|:-------:|:----------:|:-----------:|:----------:|
+|test-crc32|0m5,542s|0m5,304s|0m4,021s|0m4,664s|FAIL|0m2,135s|
+|test-double|0m13,603s|0m2,332s|0m1,676s|FAIL|FAIL|FAIL|
+|test-float|0m9,856s|0m5,161s|0m5,224s|FAIL|FAIL|FAIL|
+|test-memcmp|0m1,233s|0m1,028s|0m0,883s|0m0,902s|0m1,025s|FAIL|
+|test-strcmp|0m1,059s|0m1,244s|0m1,091s|0m1,073s|0m1,025s|FAIL|
+|test-u128|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-u16|0m2,488s|0m4,150s|0m1,910s|0m1,917s|FAIL|FAIL|
+|test-u32|0m2,464s|0m3,358s|FAIL|FAIL|FAIL|FAIL|
+|test-u32-cmp|0m6,259s|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-u64|0m2,848s|0m1,686s|0m1,078s|0m1,081s|0m4,623s|0m18,123s|
+|test-u8|0m4,255s|0m2,488s|0m1,911s|0m1,916s|FAIL|FAIL|
+
+afl++_cmplog_variant has the best solve, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/).
+So it is hard to say which approach is the best ...
+
 ## More testcases or fuzzers?
 
 Just add them and send PR.
-

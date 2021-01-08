@@ -36,10 +36,10 @@ make clean >/dev/null 2>&1
 make || exit 1
 rm -rf in out-*
 mkdir in || exit 1
-echo ZZZZZZZZZZZZZ > in/in
+echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ > in/in
 echo
 
-# AFL envs
+# set envs
 export AFL_NO_UI=1
 export AFL_BENCH_UNTIL_CRASH=1
 export AFL_SKIP_CPUFREQ=1
@@ -47,46 +47,61 @@ export AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
 export RUNTIME
 unset ASAN_OPTIONS
 test -n "$FUZZER_DIR" && export PATH=$FUZZER_DIR:$PATH
+test -n "$FUZZER_DIR" && export AFL_PATH=$FUZZER_DIR
+SUCCESS=0
+FAIL=0
 
 # run test cases
-for i in *.c; do
+for i in test-*.c; do
   TARGET=${i//\.c/}
   test -x "$TARGET" && {
     echo Running $TARGET ...
+
     test "$FUZZER" = afl++ && {
       TIME=`{ time afl-fuzz -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
       ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
         echo SUCCESS: $TARGET $TIME
         rm -rf out-$TARGET $TARGET.log
+        SUCCESS=$((SUCCESS + 1))
       } || {
         echo FAIL: $TARGET
         ls out-$TARGET/default/queue
         echo 
+        FAIL=$((FAIL + 1))
       }
     }
+
     test "$FUZZER" = honggfuzz && {
       cp -r in out-$TARGET
       TIME=`{ time honggfuzz --run_time $RUNTIME -q --exit_upon_crash -i out-$TARGET -s -v -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
       ls SIGABRT* >/dev/null 2>&1 && {
         echo SUCCESS: $TARGET $TIME
         rm -rf out-$TARGET SIGABRT* HONGGFUZZ.REPORT.TXT $TARGET.log
+        SUCCESS=$((SUCCESS + 1))
       } || {
         echo FAIL: $TARGET
         ls out-$TARGET/
         echo 
+        FAIL=$((FAIL + 1))
       }
     }
+
     test "$FUZZER" = libfuzzer && {
       cp -r in out-$TARGET
       TIME=`{ time ./$TARGET -entropic=1 -timeout=1 -detect_leaks=0 -max_total_time=$RUNTIME -workers=0 >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
       ls crash* >/dev/null 2>&1 && {
         echo SUCCESS: $TARGET $TIME
         rm -rf out-$TARGET crash* $TARGET.log
+        SUCCESS=$((SUCCESS + 1))
       } || {
         echo FAIL: $TARGET
         ls out-$TARGET/
         echo 
+        FAIL=$((FAIL + 1))
       }
     }
+
   }
 done
+
+echo "Done! SUCCESS=$SUCCESS FAIL=$FAIL"

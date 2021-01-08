@@ -7,4 +7,4 @@ all:	$(TARGETS)
 
 clean:
 	rm -f $(TARGETS) core* *~ *.log
-	rm -rf out-*
+	rm -rf out-* in
