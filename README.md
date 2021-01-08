@@ -44,7 +44,7 @@ On failure the the generated corpus files are displayed (so you can see how many
 All from current repository state.
 Solve time: 20 seconds (to give libfuzzer a better chance)
 
-|testcase|afl++_cmplog_variant|afl++_cmplog_variant2|afl++_dev|afl++_stable|honggfuzz-2.3|libfuzzer-12|
+|testcase|afl++_variant1|afl++_variant2|afl++_dev|afl++_stable|honggfuzz-2.3|libfuzzer-12|
 |:------:|:------------------:|:-------------------:|:-------:|:----------:|:-----------:|:----------:|
 |test-crc32|0m5,542s|0m5,304s|0m4,021s|0m4,664s|FAIL|0m2,135s|
 |test-double|0m13,603s|0m2,332s|0m1,676s|FAIL|FAIL|FAIL|
