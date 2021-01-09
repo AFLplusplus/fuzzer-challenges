@@ -43,7 +43,7 @@ All from current repository state (afl++_vX is the cmplog_variant branch with -l
 Solve time: 120 seconds
 
 |testcase|afl++_v3|afl++_v2|afl++_v1|afl++_dev|afl++_stable|honggfuzz-2.3|libfuzzer-12|
-|:------:|:------------------:|:-------------------:|:-------:|:----------:|:-----------:|:----------:|
+|:------:|:------:|:------:|:------:|:-------:|:----------:|:-----------:|:----------:|
 |test-crc32|0m3,782s|0m2,923s|0m56,395s|0m4,021s|0m4,664s|FAIL|0m2,135s|
 |test-double|0m8,027s|0m2,241s|0m8,660s|0m1,676s|FAIL|FAIL|FAIL|
 |test-float|0m5,834s|0m13,146s|0m17,137s|0m5,224s|FAIL|FAIL|FAIL|
