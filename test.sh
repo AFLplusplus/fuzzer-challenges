@@ -6,7 +6,7 @@
 FUZZER=afl++
 
 # how many seconds to try each testcase, recommended: 10-30
-RUNTIME=15
+RUNTIME=120
 
 # test a fuzzer in a specific directory? you can put that here
 #FUZZER_DIR=~/AFLplusplus/branches/cmplog_variant
@@ -33,11 +33,18 @@ echo CFLAGS=$CFLAGS
 env|grep AFL_
 export AFL_QUIET=1
 make clean >/dev/null 2>&1
-make || exit 1
+make compile || exit 1
 rm -rf in out-*
 mkdir in || exit 1
 echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ > in/in
 echo
+test "$FUZZER" = "afl++" && {
+  OK=
+  AFL_OPT=
+  afl-fuzz -h 2>&1 | grep -q ' -l ' && OK=1
+  test -z "$OK" && echo Warning: afl++ is not cmplog_variant
+  test -n "$OK" && AFL_OPT="-l 3"
+}
 
 # set envs
 export AFL_NO_UI=1
@@ -58,10 +65,10 @@ for i in test-*.c; do
     echo Running $TARGET ...
 
     test "$FUZZER" = afl++ && {
-      TIME=`{ time afl-fuzz -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+      TIME=`{ time afl-fuzz $AFL_OPT -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
       ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
         echo SUCCESS: $TARGET $TIME
-        rm -rf out-$TARGET $TARGET.log
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
         SUCCESS=$((SUCCESS + 1))
       } || {
         echo FAIL: $TARGET
@@ -74,9 +81,10 @@ for i in test-*.c; do
     test "$FUZZER" = honggfuzz && {
       cp -r in out-$TARGET
       TIME=`{ time honggfuzz --run_time $RUNTIME -q --exit_upon_crash -i out-$TARGET -s -v -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
-      ls SIGABRT* >/dev/null 2>&1 && {
+      ls SIG* >/dev/null 2>&1 && {
         echo SUCCESS: $TARGET $TIME
-        rm -rf out-$TARGET SIGABRT* HONGGFUZZ.REPORT.TXT $TARGET.log
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
+        rm -f SIG* HONGGFUZZ.REPORT.TXT 
         SUCCESS=$((SUCCESS + 1))
       } || {
         echo FAIL: $TARGET
@@ -91,7 +99,8 @@ for i in test-*.c; do
       TIME=`{ time ./$TARGET -entropic=1 -timeout=1 -detect_leaks=0 -max_total_time=$RUNTIME -workers=0 >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
       ls crash* >/dev/null 2>&1 && {
         echo SUCCESS: $TARGET $TIME
-        rm -rf out-$TARGET crash* $TARGET.log
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
+        rm -f crash*
         SUCCESS=$((SUCCESS + 1))
       } || {
         echo FAIL: $TARGET

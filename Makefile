@@ -1,6 +1,10 @@
 TARGETS = test-crc32 test-u16 test-u32 test-u64 test-u8 test-float test-double test-longdouble test-u128 test-u32-cmp test-memcmp test-strcmp
 
-all:	$(TARGETS)
+all:
+	@echo Use test.sh to perform the test.
+	@echo To compile with CC and CFLAGS yourself do \"make compile\", however test.sh will overwrite these.
+
+compile:	$(TARGETS)
 
 %:	%.c
 	$(CC) $(CFLAGS) -o $@ $@.c
