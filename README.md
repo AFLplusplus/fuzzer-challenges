@@ -44,7 +44,7 @@ On failure the the generated corpus files are displayed (so you can see how many
 All from current repository state (afl++_vX is the cmplog_variant branch with -l option).
 Solve time: 120 seconds
 
-|testcase|afl++_v3|afl++_v2|afl++_v1|afl++_dev|afl++_stable|honggfuzz-2.3|libfuzzer-11|
+|testcase|afl++_v3|afl++_v2|afl++_v1|afl++_dev|afl++_stable|honggfuzz-2.3|libfuzzer-12|
 |:------:|:------:|:------:|:------:|:-------:|:----------:|:-----------:|:----------:|
 |test-crc32|0m3,782s|0m2,923s|0m56,395s|0m4,021s|0m4,664s|FAIL|FAIL|
 |test-longdouble|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
@@ -52,7 +52,7 @@ Solve time: 120 seconds
 |test-float|0m5,834s|0m13,146s|0m17,137s|0m5,224s|FAIL|FAIL|FAIL|
 |test-memcmp|0m0,631s|0m0,634s|0m10,185s|0m0,883s|0m0,902s|0m1,025s|0m1,492s|
 |test-strcmp|0m0,676s|0m0,646s|0m6,345s|0m1,091s|0m1,073s|0m1,025s|0m4,801s|
-|test-transform|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-transform|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|0m1,453s|
 |test-u128|0m2,311s|0m1,258s|0m11,990s|FAIL|FAIL|FAIL|0m3,906s|
 |test-u16|0m1,855s|0m2,076s|0m20,908s|0m1,910s|0m1,917s|FAIL|FAIL|
 |test-u32|0m1,665s|0m1,290s|0m13,367s|FAIL|FAIL|FAIL|FAIL|
