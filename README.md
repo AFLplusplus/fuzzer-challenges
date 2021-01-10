@@ -53,14 +53,14 @@ Solve time: 120 seconds
 |test-memcmp|0m0,631s|0m0,634s|0m10,185s|0m0,883s|0m0,902s|0m1,025s|0m1,492s|
 |test-strcmp|0m0,676s|0m0,646s|0m6,345s|0m1,091s|0m1,073s|0m1,025s|0m4,801s|
 |test-transform|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|0m1,453s|
-|test-u128|0m2,311s|0m1,258s|0m11,990s|FAIL|FAIL|FAIL|0m3,906s|
+|test-u128|0m2,311s|0m1,258s|0m11,990s|FAIL|FAIL|FAIL|FAIL|
 |test-u16|0m1,855s|0m2,076s|0m20,908s|0m1,910s|0m1,917s|FAIL|FAIL|
 |test-u32|0m1,665s|0m1,290s|0m13,367s|FAIL|FAIL|FAIL|FAIL|
 |test-u32-cmp|0m3,964s|15,852s|21.751ms|FAIL|FAIL|FAIL|FAIL|
-|test-u64|0m1,665s|0m0,823s|0m7,008s|0m1,078s|0m1,081s|0m8,823s|0m18,123s|
+|test-u64|0m1,665s|0m0,823s|0m7,008s|0m1,078s|0m1,081s|0m8,823s||
 |test-u8|0m1,810s|0m1,446s|0m10,093s|0m1,911s|0m1,916s|1m16,225s|FAIL|
 
-afl++_cmplog_variant has the best solve, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/).
+afl++_cmplog_variant has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/).
 Interpretation: the **slowest** solver is the best in real-world fuzzing.
 
 ## More testcases or fuzzers?

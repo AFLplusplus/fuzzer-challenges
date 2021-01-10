@@ -30,7 +30,8 @@ test "$FUZZER" = "libfuzzer" && {
   export CC=clang
   export CXX=clang++
   export CFLAGS="-fsanitize=fuzzer -fsanitize=address"
-  export FUZZER_OPTIONS="-entropic=1 -use_value_profile=1 $FUZZER_OPTIONS"
+  #counterproductive: -use_value_profile=1
+  export FUZZER_OPTIONS="-entropic=1 $FUZZER_OPTIONS"
   DONE=1
 }
 test "$FUZZER" = "honggfuzz" && {
