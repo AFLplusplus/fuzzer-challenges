@@ -30,7 +30,7 @@ test "$FUZZER" = "libfuzzer" && {
   export CC=clang
   export CXX=clang++
   export CFLAGS="-fsanitize=fuzzer -fsanitize=address"
-  expport FUZZER_OPTIONS="-entropic=1 $FUZZER_OPTIONS"
+  export FUZZER_OPTIONS="-entropic=1 -use_value_profile=1 $FUZZER_OPTIONS"
   DONE=1
 }
 test "$FUZZER" = "honggfuzz" && {
@@ -82,7 +82,6 @@ echo Fuzzer special options: $FUZZER_OPTIONS
 # run test cases
 for i in *.c*; do
   TARGET=${i//\.c*/}
-echo $i $TARGET
   test -x "$TARGET" && {
     echo Running $TARGET ...
 
