@@ -47,8 +47,8 @@ Solve time: 120 seconds
 |test-crc32|0m3,782s|0m2,923s|0m56,395s|0m4,021s|0m4,664s|FAIL|0m2,135s|
 |test-double|0m8,027s|0m2,241s|0m8,660s|0m1,676s|FAIL|FAIL|FAIL|
 |test-float|0m5,834s|0m13,146s|0m17,137s|0m5,224s|FAIL|FAIL|FAIL|
-|test-memcmp|0m0,631s|0m0,634s|0m10,185s|0m0,883s|0m0,902s|0m1,025s|FAIL|
-|test-strcmp|0m0,676s|0m0,646s|0m6,345s|0m1,091s|0m1,073s|0m1,025s|FAIL|
+|test-memcmp|0m0,631s|0m0,634s|0m10,185s|0m0,883s|0m0,902s|0m1,025s|0m1,492s|
+|test-strcmp|0m0,676s|0m0,646s|0m6,345s|0m1,091s|0m1,073s|0m1,025s|0m4,801s|
 |test-u128|0m2,311s|0m1,258s|0m11,990s|FAIL|FAIL|FAIL|FAIL|
 |test-u16|0m1,855s|0m2,076s|0m20,908s|0m1,910s|0m1,917s|FAIL|FAIL|
 |test-u32|0m1,665s|0m1,290s|0m13,367s|FAIL|FAIL|FAIL|FAIL|

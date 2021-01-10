@@ -6,7 +6,7 @@
 FUZZER=afl++
 
 # how many seconds to try each testcase, recommended: 10-30
-RUNTIME=120
+RUNTIME=30
 
 # test a fuzzer in a specific directory? you can put that here
 #FUZZER_DIR=~/AFLplusplus/branches/cmplog_variant
@@ -18,9 +18,23 @@ RUNTIME=120
 test -z "$1" && { echo Warning: no target given - assuming afl++ - available: afl++, honggfuzz, libfuzzer; echo; }
 test -n "$1" && FUZZER=$1
 DONE=
-test "$FUZZER" = "afl++" && { export CC=afl-clang-fast; export AFL_LLVM_CMPLOG=1; DONE=1; }
-test "$FUZZER" = "libfuzzer" && { export CC=clang; export CFLAGS=-fsanitize=fuzzer; DONE=1; }
-test "$FUZZER" = "honggfuzz" && { export CC=hfuzz-clang; DONE=1; }
+
+# fuzzer options
+test "$FUZZER" = "afl++" && { 
+  export CC=afl-clang-fast
+  export AFL_LLVM_CMPLOG=1
+  DONE=1
+}
+test "$FUZZER" = "libfuzzer" && { 
+  export CC=clang
+  export CFLAGS="-fsanitize=fuzzer -fsanitize=address"
+  DONE=1
+}
+test "$FUZZER" = "honggfuzz" && {
+  export CC=hfuzz-clang
+  DONE=1
+}
+
 test -z "$DONE" && { echo Error: invalid fuzzer, allowed are only afl++, libfuzzer or honggfuzz; exit 1; }
 echo Fuzzer: $FUZZER
 echo Maximum runtime: $RUNTIME
@@ -96,6 +110,7 @@ for i in test-*.c; do
 
     test "$FUZZER" = libfuzzer && {
       cp -r in out-$TARGET
+      # -use_value_profile=1 decreases the performance
       TIME=`{ time ./$TARGET -entropic=1 -timeout=1 -detect_leaks=0 -max_total_time=$RUNTIME -workers=0 >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
       ls crash* >/dev/null 2>&1 && {
         echo SUCCESS: $TARGET $TIME
