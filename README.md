@@ -61,7 +61,7 @@ Solve time: 120 seconds
 |test-u16|0m1,233s|0m1,442s|0m18,811s|0m1,928s|0m2,135s|FAIL|FAIL|
 |test-u32|0m1,434s|0m1,641s|0m12,085s|FAIL|FAIL|FAIL|FAIL|
 |test-u32-cmp|0m1,068s|0m14,712s|0m16,021s|FAIL|FAIL|FAIL|FAIL|
-|test-u64|0m0,623s|0m0,625s|0m13,063s|0m1,083s|0m0,896s|FAIL|FAIL|
+|test-u64|0m0,623s|0m0,625s|0m13,063s|0m1,083s|0m0,896s|FAIL|1m24,684s|
 |test-u8|0m1,449s|0m1,259s|0m8,260s|0m2,130s|0m2,139s|FAIL|FAIL|
 
 afl++_cmplog_variant has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/).
