@@ -54,7 +54,8 @@ export CXXFLAGS="$CFLAGS $CXXFLAGS"
 export AFL_QUIET=1
 make clean >/dev/null 2>&1
 make compile || exit 1
-rm -rf in out-*
+rm -rf in out-* *.log crash* SIG* HONGGFUZZ.REPORT.TXT
+ulimit -c 0
 mkdir in || exit 1
 echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ > in/in
 test "$FUZZER" = "afl++" && {

@@ -10,10 +10,9 @@
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   int Num = 0;
   for (size_t i = 0; i < Size; i++)
-    if (Data[i] == 'A' + i)
-      Num++;
+    if (Data[i] == 'A' + i) Num++;
   if (Num >= 4) {
-    std::cerr <<  "BINGO!\n";
+    std::cerr << "BINGO!\n";
     abort();
   }
   return 0;
@@ -22,13 +21,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

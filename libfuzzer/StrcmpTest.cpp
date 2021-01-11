@@ -11,19 +11,18 @@
 #include <cstring>
 
 bool Eq(const uint8_t *Data, size_t Size, const char *Str) {
-  char Buff[1024];
+  char   Buff[1024];
   size_t Len = strlen(Str);
   if (Size < Len) return false;
   if (Len >= sizeof(Buff)) return false;
-  memcpy(Buff, (const char*)Data, Len);
+  memcpy(Buff, (const char *)Data, Len);
   Buff[Len] = 0;
   int res = strcmp(Buff, Str);
   return res == 0;
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-  if (Eq(Data, Size, "ABC") &&
-      Size >= 3 && Eq(Data + 3, Size - 3, "QWER") &&
+  if (Eq(Data, Size, "ABC") && Size >= 3 && Eq(Data + 3, Size - 3, "QWER") &&
       Size >= 7 && Eq(Data + 7, Size - 7, "ZXCVN")) {
     fprintf(stderr, "BINGO\n");
     abort();
@@ -34,13 +33,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

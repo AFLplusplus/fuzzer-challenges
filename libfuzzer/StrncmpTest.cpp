@@ -13,9 +13,8 @@ static volatile int sink;
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   // TODO: check other sizes.
-  const char *S = (const char*)Data;
-  if (Size >= 8 && strncmp(S, "123", 8))
-    sink = 1;
+  const char *S = (const char *)Data;
+  if (Size >= 8 && strncmp(S, "123", 8)) sink = 1;
   if (Size >= 8 && strncmp(S, "01234567", 8) == 0) {
     if (Size >= 12 && strncmp(S + 8, "ABCD", 4) == 0) {
       if (Size >= 14 && strncmp(S + 12, "XY", 2) == 0) {
@@ -32,13 +31,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

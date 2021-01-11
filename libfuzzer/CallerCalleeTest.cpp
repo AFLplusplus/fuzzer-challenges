@@ -18,28 +18,37 @@ void f34() {
   std::cerr << "BINGO\n";
   abort();
 }
-void f23() { t[(unsigned)'d'] = f34;}
-void f12() { t[(unsigned)'c'] = f23;}
-void f01() { t[(unsigned)'b'] = f12;}
-void f00() {}
+void f23() {
+  t[(unsigned)'d'] = f34;
+}
+void f12() {
+  t[(unsigned)'c'] = f23;
+}
+void f01() {
+  t[(unsigned)'b'] = f12;
+}
+void f00() {
+}
 
 static F t0[256] = {
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
-  f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00, f00,
+    f00,
 };
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
@@ -59,17 +68,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   return 0;
 }
 
-
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

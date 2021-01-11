@@ -16,25 +16,24 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   uint32_t v;
   if (Size < 100) return 0;
   memcpy(&v, Data + Size / 2, sizeof(v));
-  switch(v) {
-    case 0x47524159: abort();
-    case 0x52474220: abort();
+  switch (v) {
+    case 0x47524159:
+      abort();
+    case 0x52474220:
+      abort();
     default:;
   }
   return 0;
 }
 
-
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

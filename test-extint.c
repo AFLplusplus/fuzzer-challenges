@@ -11,25 +11,29 @@
     return 0;                                                  \
   }
 
-typedef unsigned __int128 uint128_t;
+typedef _ExtInt(24) uint24_t;
+typedef _ExtInt(40) uint40_t;
+typedef _ExtInt(56) uint56_t;
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
-  uint128_t *p128, v128, i;
-  uint8_t *  p = (uint8_t *)&v128;
+  uint24_t *p24, v24;
+  uint40_t *p40, v40;
+  uint56_t *p56, v56;
+  int       i = 0;
 
-  if (len < 48) bail("too short", 48);
+  if (len < 16) bail("too short", 0);
 
-  for (i = 0; i < 2; i++) {
-    if (len < 16 + i * 16) bail("too short", i * 16);
-    p128 = (uint128_t *)(buf + i * 16);
-    memset((char *)&v128, 'A' + i * 5, sizeof(v128));
-    if (*p128 != v128) bail("wrong u128", (i * 16));
-  }
+  p24 = (uint24_t *)buf;
+  v24 = (uint24_t)0x123456;
+  if (*p24 != v24) bail("wrong uint24_t", 0);
 
-  for (i = 0; i < sizeof(v128); i++)
-    p[i] = '0' + i * 2;
-  p128 = (uint128_t *)(buf + 32);
-  if (*p128 != v128) bail("wrong u128", 32);
+  p40 = (uint40_t *)(buf + 3);
+  v40 = (uint40_t)0x1234554321;
+  if (*p40 != v40) bail("wrong uint40_t", 8);
+
+  p56 = (uint56_t *)(buf + 8);
+  v56 = (uint56_t)0x77665544332211;
+  if (*p56 != v56) bail("wrong uint56_t", 16);
 
   abort();
 
@@ -38,7 +42,7 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
 #ifdef __AFL_COMPILER
 int main() {
-  unsigned char buf[128];
+  unsigned char buf[64];
   ssize_t       len;
 
   if ((len = read(0, buf, sizeof(buf))) <= 0) exit(0);

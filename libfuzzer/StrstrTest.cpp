@@ -12,17 +12,15 @@
 
 // Windows does not have strcasestr and memmem, so we are not testing them.
 #ifdef _WIN32
-#define strcasestr strstr
-#define memmem(a, b, c, d) true
+  #define strcasestr strstr
+  #define memmem(a, b, c, d) true
 #endif
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   if (Size < 4) return 0;
-  std::string s(reinterpret_cast<const char*>(Data), Size);
-  if (strstr(s.c_str(), "FUZZ") &&
-      strcasestr(s.c_str(), "aBcD") &&
-      memmem(s.data(), s.size(), "kuku", 4)
-      ) {
+  std::string s(reinterpret_cast<const char *>(Data), Size);
+  if (strstr(s.c_str(), "FUZZ") && strcasestr(s.c_str(), "aBcD") &&
+      memmem(s.data(), s.size(), "kuku", 4)) {
     fprintf(stderr, "BINGO\n");
     abort();
   }
@@ -32,13 +30,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

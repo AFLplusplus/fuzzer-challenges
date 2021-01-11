@@ -15,8 +15,7 @@ static volatile int Sink;
 void Recursive(const uint8_t *Data, size_t Size, int Depth) {
   if (Depth > 1000) abort();
   if (!Size) return;
-  if (*Data == ('A' + Depth % 10))
-    Recursive(Data + 1, Size - 1, Depth + 1);
+  if (*Data == ('A' + Depth % 10)) Recursive(Data + 1, Size - 1, Depth + 1);
   Sink++;
 }
 
@@ -25,17 +24,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   return 0;
 }
 
-
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

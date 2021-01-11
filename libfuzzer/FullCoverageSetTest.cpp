@@ -18,23 +18,20 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   if (Size > 4 && Data[4] == 'E') bits |= 16;
   if (Size > 5 && Data[5] == 'R') bits |= 32;
   if (bits == 63) {
-    std::cerr <<  "BINGO!\n";
+    std::cerr << "BINGO!\n";
     abort();
   }
   return 0;
 }
 
-
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

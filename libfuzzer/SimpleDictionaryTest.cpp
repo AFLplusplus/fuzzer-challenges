@@ -21,8 +21,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   if (Size < strlen(Expected)) return 0;
   size_t Match = 0;
   for (size_t i = 0; Expected[i]; i++)
-    if (Expected[i] + Zero == Data[i])
-      Match++;
+    if (Expected[i] + Zero == Data[i]) Match++;
   if (Match == strlen(Expected)) {
     std::cout << "BINGO; Found the target, exiting\n" << std::flush;
     abort();
@@ -30,17 +29,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   return 0;
 }
 
-
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

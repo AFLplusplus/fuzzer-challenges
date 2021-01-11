@@ -12,35 +12,31 @@
 extern int AllLines[];
 
 bool PrintOnce(int Line) {
-  if (!AllLines[Line])
-    fprintf(stderr, "Seen line %d\n", Line);
+  if (!AllLines[Line]) fprintf(stderr, "Seen line %d\n", Line);
   AllLines[Line] = 1;
   return true;
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-  if (Size != 21)
-    return 0;
+  if (Size != 21) return 0;
   uint64_t x = 0;
   int64_t  y = 0;
-  int32_t z = 0;
-  uint8_t a = 0;
-  memcpy(&x, Data, 8);  // 8
-  memcpy(&y, Data + 8, 8);  // 16
+  int32_t  z = 0;
+  uint8_t  a = 0;
+  memcpy(&x, Data, 8);               // 8
+  memcpy(&y, Data + 8, 8);           // 16
   memcpy(&z, Data + 16, sizeof(z));  // 20
   memcpy(&a, Data + 20, sizeof(a));  // 21
-  const bool k32bit = sizeof(void*) == 4;
+  const bool k32bit = sizeof(void *) == 4;
 
   if ((k32bit || x > 1234567890) && PrintOnce(__LINE__) &&
-      (k32bit || x < 1234567895) && PrintOnce(__LINE__) &&
-      a == 0x42 && PrintOnce(__LINE__) &&
-      (k32bit || y >= 987654321) && PrintOnce(__LINE__) &&
-      (k32bit || y <= 987654325) && PrintOnce(__LINE__) &&
-      z < -10000 && PrintOnce(__LINE__) &&
-      z >= -10005 && PrintOnce(__LINE__) &&
-      z != -10003 && PrintOnce(__LINE__) &&
-      true) {
-    fprintf(stderr, "BINGO; Found the target: size %zd (%zd, %zd, %d, %d), exiting.\n",
+      (k32bit || x < 1234567895) && PrintOnce(__LINE__) && a == 0x42 &&
+      PrintOnce(__LINE__) && (k32bit || y >= 987654321) &&
+      PrintOnce(__LINE__) && (k32bit || y <= 987654325) &&
+      PrintOnce(__LINE__) && z < -10000 && PrintOnce(__LINE__) && z >= -10005 &&
+      PrintOnce(__LINE__) && z != -10003 && PrintOnce(__LINE__) && true) {
+    fprintf(stderr,
+            "BINGO; Found the target: size %zd (%zd, %zd, %d, %d), exiting.\n",
             Size, x, y, z, a);
     abort();
   }
@@ -52,13 +48,11 @@ int AllLines[__LINE__ + 1];  // Must be the last line.
 #ifdef __AFL_COMPILER
 int main() {
   unsigned char buf[64];
-  ssize_t len;
+  ssize_t       len;
 
-  if ((len = read(0, buf, sizeof(buf))) <= 0)
-    return -1;
+  if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
-
 }
 #endif

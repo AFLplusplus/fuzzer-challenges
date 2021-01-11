@@ -4,6 +4,7 @@
 #include <strings.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 
 #define bail(msg, pos)                                         \
   while (1) {                                                  \
@@ -23,6 +24,7 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
     lesser = 1000000.1 + 10011.0 * i + i;
     greater = 1000009.9 + 10011.0 * i - i;
     if (*p64 < lesser || *p64 > greater) bail("wrong double", (i * 8));
+    if (!isnormal(*p64)) bail("not normal double", (i * 8));
   }
 
   // harder
@@ -31,11 +33,13 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
     lesser = 300000.1 + 31050.0 * i + i;
     greater = 300009.9 + 31050.0 * i - i;
     if (*p64 <= lesser || *p64 >= greater) bail("wrong double", (i * 8));
+    if (!isnormal(*p64)) bail("not normal double", (i * 8));
   }
 
   // exact
   p64 = (double *)(buf + 32);
   if (*p64 != 3.141592653589793116) bail("wrong double", 32);
+  if (!isnormal(*p64)) bail("not normal double", 32);
 
   abort();
 
