@@ -1,6 +1,9 @@
 # Fuzzing introspection testcases
 
 Test a fuzzer what fuzzing challenges it can solve.
+The goal is to have testcases that afl++ can all complete - once they are all implemented.
+The comparisons to honggfuzz and libfuzzer are biased, as the testcases are how afl-fuzz sees things.
+The `libfuzzer/` directories has libfuzzer's own testcases, of which afl++ is only able to solve 45%.
 
 ## Setup
 
@@ -34,17 +37,17 @@ The fuzzers and necessary compilers must be in the path: `afl-clang-fast`, `afl-
   * `test-transform` - different transforming string checks
   * `test-crc32` - several chained crc32 checks
 
-The testcases are still being further refined, some of them were too easy to solve just accidently.
+The testcases are WIP - some might be further refined in the future and more added.
 
 ## Results
 
-On success the time to solve is displayed (note that afl++ has a longer startup time than all other fuzzers).
+On success the time to solve is displayed.
 
-On failure the the generated corpus files are displayed (so you can see how many finds there were). There is also an output log called `TESTCASE.log`.
+On failure the generated corpus files are displayed (so you can see how many finds there were). There is also an output log called `TESTCASE.log`.
 
 ## Test as of 11th January 2021
 
-All from current repository state (afl++_vX is the cmplog_variant branch with -l option).
+All from current repository state (afl++_vX is the cmplog_variant branch with -l option value X).
 Solve time: 120 seconds
 
 |testcase|afl++_v3|afl++_v2|afl++_v1|afl++_dev|afl++_stable|honggfuzz-2.3|libfuzzer-12|
@@ -64,7 +67,7 @@ Solve time: 120 seconds
 |test-u64|0m0,623s|0m0,625s|0m13,063s|0m1,083s|0m0,896s|FAIL|1m24,684s|
 |test-u8|0m1,449s|0m1,259s|0m8,260s|0m2,130s|0m2,139s|FAIL|FAIL|
 
-afl++_cmplog_variant has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-08-aflpp/).
+afl++_cmplog_variant has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/).
 Interpretation: the **slowest** solver is the best in real-world fuzzing.
 
 ## More testcases or fuzzers?

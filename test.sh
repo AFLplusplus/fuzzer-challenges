@@ -6,7 +6,7 @@
 FUZZER=afl++
 
 # how many seconds to try each testcase, recommended: 10-30
-RUNTIME=120
+RUNTIME=45
 
 # test a fuzzer in a specific directory? you can put that here
 #FUZZER_DIR=~/AFLplusplus/branches/cmplog_variant
@@ -24,14 +24,15 @@ test "$FUZZER" = "afl++" && {
   export CC=afl-clang-fast
   export CXX=afl-clang-fast++
   export AFL_LLVM_CMPLOG=1
+  export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
+  export CMPLOG_LVL=3
   DONE=1
 }
 test "$FUZZER" = "libfuzzer" && { 
   export CC=clang
   export CXX=clang++
   export CFLAGS="-fsanitize=fuzzer -fsanitize=address"
-  #counterproductive: -use_value_profile=1
-  export FUZZER_OPTIONS="-entropic=1 $FUZZER_OPTIONS"
+  export FUZZER_OPTIONS="-use_value_profile=1 -entropic=1 $FUZZER_OPTIONS"
   DONE=1
 }
 test "$FUZZER" = "honggfuzz" && {
@@ -62,7 +63,7 @@ test "$FUZZER" = "afl++" && {
   OK=
   afl-fuzz -h 2>&1 | grep -q ' -l ' && OK=1
   test -z "$OK" && echo Warning: afl++ is not cmplog_variant
-  test -n "$OK" && FUZZER_OPTIONS="-l 3 $FUZZER_OPTIONS"
+  test -n "$OK" && FUZZER_OPTIONS="-l $CMPLOG_LVL $FUZZER_OPTIONS"
 }
 
 # set envs
@@ -88,7 +89,7 @@ for i in *.c*; do
     echo Running $TARGET ...
 
     test "$FUZZER" = afl++ && {
-      TIME=`{ time afl-fuzz $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+      TIME=`{ time afl-fuzz -x afl++.dic $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
       ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
         echo SUCCESS: $TARGET $TIME
         test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
