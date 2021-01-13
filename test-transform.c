@@ -34,8 +34,8 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
   // cesar cipher
   for (i = 0; i < 4; i++)
-    buff[i + 20] = buff[i + 20] + 4;
-  if (memcmp(buff + 20, "EFGH", 4)) bail("wrong string", 20);
+    buff[i + 20] = buff[i + 20] + 5;
+  if (memcmp(buff + 20, "MNOP", 4)) bail("wrong string", 20);
 
   abort();
 
