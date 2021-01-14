@@ -1,0 +1,124 @@
+Fuzzer: libfuzzer
+Maximum runtime: 45
+
+Preparation:
+CC=clang
+CFLAGS=-fsanitize=fuzzer -fsanitize=address
+clang++ -fsanitize=fuzzer -fsanitize=address     AbsNegAndConstant64Test.cpp   -o AbsNegAndConstant64Test
+clang++ -fsanitize=fuzzer -fsanitize=address     AbsNegAndConstantTest.cpp   -o AbsNegAndConstantTest
+clang++ -fsanitize=fuzzer -fsanitize=address     CallerCalleeTest.cpp   -o CallerCalleeTest
+clang++ -fsanitize=fuzzer -fsanitize=address     CleanseTest.cpp   -o CleanseTest
+clang++ -fsanitize=fuzzer -fsanitize=address     CounterTest.cpp   -o CounterTest
+clang++ -fsanitize=fuzzer -fsanitize=address     CxxStringEqTest.cpp   -o CxxStringEqTest
+clang++ -fsanitize=fuzzer -fsanitize=address     DeepRecursionTest.cpp   -o DeepRecursionTest
+clang++ -fsanitize=fuzzer -fsanitize=address     FourIndependentBranchesTest.cpp   -o FourIndependentBranchesTest
+clang++ -fsanitize=fuzzer -fsanitize=address     FullCoverageSetTest.cpp   -o FullCoverageSetTest
+clang++ -fsanitize=fuzzer -fsanitize=address     KeepSeedTest.cpp   -o KeepSeedTest
+clang++ -fsanitize=fuzzer -fsanitize=address     Labels20Test.cpp   -o Labels20Test
+clang++ -fsanitize=fuzzer -fsanitize=address     Memcmp64BytesTest.cpp   -o Memcmp64BytesTest
+clang++ -fsanitize=fuzzer -fsanitize=address     MemcmpTest.cpp   -o MemcmpTest
+clang++ -fsanitize=fuzzer -fsanitize=address     MultipleConstraintsOnSmallInputTest.cpp   -o MultipleConstraintsOnSmallInputTest
+clang++ -fsanitize=fuzzer -fsanitize=address     OnlySomeBytesTest.cpp   -o OnlySomeBytesTest
+clang++ -fsanitize=fuzzer -fsanitize=address     RepeatedBytesTest.cpp   -o RepeatedBytesTest
+clang++ -fsanitize=fuzzer -fsanitize=address     RepeatedMemcmp.cpp   -o RepeatedMemcmp
+clang++ -fsanitize=fuzzer -fsanitize=address     SimpleCmpTest.cpp   -o SimpleCmpTest
+clang++ -fsanitize=fuzzer -fsanitize=address     SimpleDictionaryTest.cpp   -o SimpleDictionaryTest
+clang++ -fsanitize=fuzzer -fsanitize=address     SimpleHashTest.cpp   -o SimpleHashTest
+clang++ -fsanitize=fuzzer -fsanitize=address     SimpleTest.cpp   -o SimpleTest
+clang++ -fsanitize=fuzzer -fsanitize=address     SimpleTestStdio.cpp   -o SimpleTestStdio
+clang++ -fsanitize=fuzzer -fsanitize=address     SingleByteInputTest.cpp   -o SingleByteInputTest
+clang++ -fsanitize=fuzzer -fsanitize=address     SingleMemcmpTest.cpp   -o SingleMemcmpTest
+clang++ -fsanitize=fuzzer -fsanitize=address     SingleStrcmpTest.cpp   -o SingleStrcmpTest
+clang++ -fsanitize=fuzzer -fsanitize=address     SingleStrncmpTest.cpp   -o SingleStrncmpTest
+clang++ -fsanitize=fuzzer -fsanitize=address     StrcmpTest.cpp   -o StrcmpTest
+clang++ -fsanitize=fuzzer -fsanitize=address     StrncmpTest.cpp   -o StrncmpTest
+clang++ -fsanitize=fuzzer -fsanitize=address     StrstrTest.cpp   -o StrstrTest
+clang++ -fsanitize=fuzzer -fsanitize=address     SwapCmpTest.cpp   -o SwapCmpTest
+clang++ -fsanitize=fuzzer -fsanitize=address     Switch2Test.cpp   -o Switch2Test
+clang++ -fsanitize=fuzzer -fsanitize=address     Switch3Test.cpp   -o Switch3Test
+clang++ -fsanitize=fuzzer -fsanitize=address     SwitchTest.cpp   -o SwitchTest
+clang++ -fsanitize=fuzzer -fsanitize=address     TableLookupTest.cpp   -o TableLookupTest
+clang++ -fsanitize=fuzzer -fsanitize=address     ThreeBytes.cpp   -o ThreeBytes
+clang++ -fsanitize=fuzzer -fsanitize=address     ThreeFunctionsTest.cpp   -o ThreeFunctionsTest
+
+Starting tests
+Fuzzer special options: -use_value_profile=1 -entropic=1
+Running AbsNegAndConstant64Test ...
+SUCCESS: AbsNegAndConstant64Test 0m0,327s
+Running AbsNegAndConstantTest ...
+SUCCESS: AbsNegAndConstantTest 0m0,123s
+Running CallerCalleeTest ...
+SUCCESS: CallerCalleeTest 0m1,465s
+Running CleanseTest ...
+SUCCESS: CleanseTest 0m0,181s
+Running CounterTest ...
+SUCCESS: CounterTest 0m0,168s
+Running CxxStringEqTest ...
+SUCCESS: CxxStringEqTest 0m0,025s
+Running DeepRecursionTest ...
+SUCCESS: DeepRecursionTest 0m26,038s
+Running FourIndependentBranchesTest ...
+SUCCESS: FourIndependentBranchesTest 0m13,469s
+Running FullCoverageSetTest ...
+SUCCESS: FullCoverageSetTest 0m1,726s
+Running KeepSeedTest ...
+SUCCESS: KeepSeedTest 0m1,641s
+Running Labels20Test ...
+SUCCESS: Labels20Test 0m0,315s
+Running Memcmp64BytesTest ...
+SUCCESS: Memcmp64BytesTest 0m0,026s
+Running MemcmpTest ...
+SUCCESS: MemcmpTest 0m0,341s
+Running MultipleConstraintsOnSmallInputTest ...
+FAIL: MultipleConstraintsOnSmallInputTest
+in
+
+Running OnlySomeBytesTest ...
+FAIL: OnlySomeBytesTest
+in
+
+Running RepeatedBytesTest ...
+SUCCESS: RepeatedBytesTest 0m0,024s
+Running RepeatedMemcmp ...
+SUCCESS: RepeatedMemcmp 0m0,293s
+Running SimpleCmpTest ...
+SUCCESS: SimpleCmpTest 0m0,940s
+Running SimpleDictionaryTest ...
+FAIL: SimpleDictionaryTest
+in
+
+Running SimpleHashTest ...
+SUCCESS: SimpleHashTest 0m11,277s
+Running SimpleTest ...
+SUCCESS: SimpleTest 0m0,073s
+Running SimpleTestStdio ...
+SUCCESS: SimpleTestStdio 0m0,069s
+Running SingleByteInputTest ...
+SUCCESS: SingleByteInputTest 0m0,013s
+Running SingleMemcmpTest ...
+SUCCESS: SingleMemcmpTest 0m0,017s
+Running SingleStrcmpTest ...
+SUCCESS: SingleStrcmpTest 0m0,014s
+Running SingleStrncmpTest ...
+SUCCESS: SingleStrncmpTest 0m0,014s
+Running StrcmpTest ...
+SUCCESS: StrcmpTest 0m2,504s
+Running StrncmpTest ...
+SUCCESS: StrncmpTest 0m0,397s
+Running StrstrTest ...
+SUCCESS: StrstrTest 0m0,067s
+Running SwapCmpTest ...
+SUCCESS: SwapCmpTest 0m0,856s
+Running Switch2Test ...
+SUCCESS: Switch2Test 0m0,057s
+Running Switch3Test ...
+SUCCESS: Switch3Test 0m0,116s
+Running SwitchTest ...
+SUCCESS: SwitchTest 0m4,711s
+Running TableLookupTest ...
+SUCCESS: TableLookupTest 0m2,431s
+Running ThreeBytes ...
+SUCCESS: ThreeBytes 0m0,091s
+Running ThreeFunctionsTest ...
+SUCCESS: ThreeFunctionsTest 0m0,101s
+Done! SUCCESS=33 FAIL=3

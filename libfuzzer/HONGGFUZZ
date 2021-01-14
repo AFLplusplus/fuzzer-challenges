@@ -1,0 +1,236 @@
+Fuzzer: honggfuzz
+Maximum runtime: 45
+
+Preparation:
+CC=hfuzz-clang
+CFLAGS=
+hfuzz-clang++      AbsNegAndConstant64Test.cpp   -o AbsNegAndConstant64Test
+hfuzz-clang++      AbsNegAndConstantTest.cpp   -o AbsNegAndConstantTest
+hfuzz-clang++      CallerCalleeTest.cpp   -o CallerCalleeTest
+hfuzz-clang++      CleanseTest.cpp   -o CleanseTest
+hfuzz-clang++      CounterTest.cpp   -o CounterTest
+hfuzz-clang++      CxxStringEqTest.cpp   -o CxxStringEqTest
+hfuzz-clang++      DeepRecursionTest.cpp   -o DeepRecursionTest
+hfuzz-clang++      FourIndependentBranchesTest.cpp   -o FourIndependentBranchesTest
+hfuzz-clang++      FullCoverageSetTest.cpp   -o FullCoverageSetTest
+hfuzz-clang++      KeepSeedTest.cpp   -o KeepSeedTest
+hfuzz-clang++      Labels20Test.cpp   -o Labels20Test
+hfuzz-clang++      Memcmp64BytesTest.cpp   -o Memcmp64BytesTest
+hfuzz-clang++      MemcmpTest.cpp   -o MemcmpTest
+hfuzz-clang++      MultipleConstraintsOnSmallInputTest.cpp   -o MultipleConstraintsOnSmallInputTest
+hfuzz-clang++      OnlySomeBytesTest.cpp   -o OnlySomeBytesTest
+hfuzz-clang++      RepeatedBytesTest.cpp   -o RepeatedBytesTest
+hfuzz-clang++      RepeatedMemcmp.cpp   -o RepeatedMemcmp
+hfuzz-clang++      SimpleCmpTest.cpp   -o SimpleCmpTest
+hfuzz-clang++      SimpleDictionaryTest.cpp   -o SimpleDictionaryTest
+hfuzz-clang++      SimpleHashTest.cpp   -o SimpleHashTest
+hfuzz-clang++      SimpleTest.cpp   -o SimpleTest
+hfuzz-clang++      SimpleTestStdio.cpp   -o SimpleTestStdio
+hfuzz-clang++      SingleByteInputTest.cpp   -o SingleByteInputTest
+hfuzz-clang++      SingleMemcmpTest.cpp   -o SingleMemcmpTest
+hfuzz-clang++      SingleStrcmpTest.cpp   -o SingleStrcmpTest
+hfuzz-clang++      SingleStrncmpTest.cpp   -o SingleStrncmpTest
+hfuzz-clang++      StrcmpTest.cpp   -o StrcmpTest
+hfuzz-clang++      StrncmpTest.cpp   -o StrncmpTest
+hfuzz-clang++      StrstrTest.cpp   -o StrstrTest
+hfuzz-clang++      SwapCmpTest.cpp   -o SwapCmpTest
+hfuzz-clang++      Switch2Test.cpp   -o Switch2Test
+hfuzz-clang++      Switch3Test.cpp   -o Switch3Test
+hfuzz-clang++      SwitchTest.cpp   -o SwitchTest
+hfuzz-clang++      TableLookupTest.cpp   -o TableLookupTest
+hfuzz-clang++      ThreeBytes.cpp   -o ThreeBytes
+hfuzz-clang++      ThreeFunctionsTest.cpp   -o ThreeFunctionsTest
+
+Starting tests
+Fuzzer special options:
+Running AbsNegAndConstant64Test ...
+SUCCESS: AbsNegAndConstant64Test 0m1,025s
+Running AbsNegAndConstantTest ...
+SUCCESS: AbsNegAndConstantTest 0m1,024s
+Running CallerCalleeTest ...
+SUCCESS: CallerCalleeTest 0m10,028s
+Running CleanseTest ...
+SUCCESS: CleanseTest 0m1,020s
+Running CounterTest ...
+SUCCESS: CounterTest 0m1,024s
+Running CxxStringEqTest ...
+SUCCESS: CxxStringEqTest 0m1,024s
+Running DeepRecursionTest ...
+FAIL: DeepRecursionTest
+4edc014a6c12b859ce4b48120c0a5129.00000009.honggfuzz.cov
+67c30bfbedbc4a22bfa959bcebf9b588.00000014.honggfuzz.cov
+6db00000000000006db0000000000000.00000001.honggfuzz.cov
+7999055ac9a92000004959fa553999e0.00000007.honggfuzz.cov
+79999999e000000079999999e0000000.00000004.honggfuzz.cov
+8d395c554def4eda7906f7b4223cc77c.0000001d.honggfuzz.cov
+9950e4db5a62d39ee307444f417b7c28.00000028.honggfuzz.cov
+af3b7c554def4eda7906f7b4143cc77c.0000001d.honggfuzz.cov
+bdf160b158aedf864531d1910c0a5ac3.00000010.honggfuzz.cov
+d9a450fd91d7da300dc7a94123d346b5.00000016.honggfuzz.cov
+in
+
+Running FourIndependentBranchesTest ...
+SUCCESS: FourIndependentBranchesTest 0m1,023s
+Running FullCoverageSetTest ...
+SUCCESS: FullCoverageSetTest 0m1,024s
+Running KeepSeedTest ...
+SUCCESS: KeepSeedTest 0m8,424s
+Running Labels20Test ...
+SUCCESS: Labels20Test 0m1,023s
+Running Memcmp64BytesTest ...
+SUCCESS: Memcmp64BytesTest 0m5,221s
+Running MemcmpTest ...
+SUCCESS: MemcmpTest 0m3,824s
+Running MultipleConstraintsOnSmallInputTest ...
+FAIL: MultipleConstraintsOnSmallInputTest
+26e1f77b4a99ca800ae14bb69dde8edd.00000014.honggfuzz.cov
+2a2455770bc6f6c48b46abe3ccc9d211.00000014.honggfuzz.cov
+2d215b590bc6f6c48b2c1e8052c9d211.00000014.honggfuzz.cov
+2d215be7ffdb2fa4f65e1e80528ec40d.00000014.honggfuzz.cov
+2d28cb590bc651dc8b2c155b82688811.00000014.honggfuzz.cov
+2de298590bc6f6c48b2cdd4352c9d211.00000014.honggfuzz.cov
+307e02590bc6f6208b2c3a578f90d211.00000014.honggfuzz.cov
+307e4bf3a14b89200186d9578f9091bf.00000014.honggfuzz.cov
+4c882d5c0bc7b3c48b7cd97972c9d3a1.00000014.honggfuzz.cov
+51dea57d8439c03834d2517f6e100edd.00000014.honggfuzz.cov
+51dea57d8439ca1034d2517f6e1d8edd.00000014.honggfuzz.cov
+52bea4481a5dddddd405e1d095099977.00000014.honggfuzz.cov
+56240e0c5e933333be794bd535533333.00000014.honggfuzz.cov
+56240e0c5e93a2e6be794bd535914033.00000014.honggfuzz.cov
+64e846dcc7bd2634d3e06fd205e0ba2d.00000014.honggfuzz.cov
+7933ed721ca000001f34ea7606600000.00000014.honggfuzz.cov
+794531721ca000001f34867606600000.00000014.honggfuzz.cov
+796357de0300bc20afa61650d69e7600.00000014.honggfuzz.cov
+79999999e000000079999999e0000000.00000004.honggfuzz.cov
+79e0004c1ca000001f02006606600000.00000014.honggfuzz.cov
+79ed87cc59e090004b15d89e0660c300.00000014.honggfuzz.cov
+79f0ecfc87f0000085ad2220e660000a.00000014.honggfuzz.cov
+79f357a21ca000001f3416e606600000.00000014.honggfuzz.cov
+79f357a23b1bbb9c733416e6065d7d7d.00000014.honggfuzz.cov
+7d05d53d24e61b9b344c217e263adba2.00000014.honggfuzz.cov
+7d684bff44865f6aca13c2335ae4db7b.00000014.honggfuzz.cov
+8e3f4f4bcbabea200c944425fd9037e8.00000014.honggfuzz.cov
+92de5489d469ca808a5dde7fadde8ed4.00000014.honggfuzz.cov
+92de54ee6e39ca8073b9ee7fadde8edd.00000014.honggfuzz.cov
+92de7b8af5e9ca807a0fae7fadde8edd.00000014.honggfuzz.cov
+92dea4a6f439094334d3e17fad4e1edd.00000014.honggfuzz.cov
+92dea4a6f439ca8034d3e17fadde8edd.00000014.honggfuzz.cov
+92dea4a6f4fcd9ed34d3e17fadd22a5d.00000014.honggfuzz.cov
+92deff719279ca803fdb717fadde8edd.00000014.honggfuzz.cov
+98cade0ce94f89bedc994bdd68c177b4.00000014.honggfuzz.cov
+a0b2484536497479556c00b954ea84cc.00000014.honggfuzz.cov
+af064f722499ca803cbb714eddde8edd.00000014.honggfuzz.cov
+b0ac08acaa2c5c8ab5e030ddf17e3c66.00000014.honggfuzz.cov
+b0ac0c850f2c5c8acd4161ddf17e3c66.00000014.honggfuzz.cov
+c77b14dc5e9315ccbe79e99da99fc333.00000014.honggfuzz.cov
+ccb10e0c5e93a35abe794bd479000533.00000014.honggfuzz.cov
+e09852ded909218886210f46822902ab.00000014.honggfuzz.cov
+e0987b06a2d0c3e472453f46823990c3.00000014.honggfuzz.cov
+e098b4528c30c3e4a9d59f46823990c3.00000014.honggfuzz.cov
+f0cb2a9e796e79c3d2be90c84675e1f6.00000014.honggfuzz.cov
+f9ba19b6f170ca81bb27487ebc6e8e5c.00000014.honggfuzz.cov
+fc740259d97fe47a1e1c3af7e732c9bb.00000014.honggfuzz.cov
+in
+
+Running OnlySomeBytesTest ...
+FAIL: OnlySomeBytesTest
+081bbf8709003118b003d5b4b82271bf.00001ff5.honggfuzz.cov
+17664bf624ca5c153976de5241a4b59c.00002000.honggfuzz.cov
+2036623a3077a8bdf69ca11a2bc48e69.00001ff0.honggfuzz.cov
+3daa261bdef5d5df413370ebe355db66.00000800.honggfuzz.cov
+56b837f830d58232b448f2ed66430297.00001e0c.honggfuzz.cov
+59b9601890c5430ba949d6909af20319.00001ff8.honggfuzz.cov
+5eb6eebddd6c0f49436c3988663618cf.00002000.honggfuzz.cov
+6636c91c38b3752fd966b360c71d8637.00001ff7.honggfuzz.cov
+66e27d845557f30895967c26982a235b.00002000.honggfuzz.cov
+79999999e000000079999999e0000000.00000004.honggfuzz.cov
+8935ee468bb2790c8c7dc81e8ae98438.00001fdf.honggfuzz.cov
+93f18fa9cf7ad1b793f18fa9cf7ad1b7.00001e01.honggfuzz.cov
+955f5e8bf0bd6bcde5feb3b157ad587a.00002000.honggfuzz.cov
+97fd2576e158b3649f06484cc1f69f6e.00000801.honggfuzz.cov
+c0744bf0ac920897f154023b0d736508.00001fef.honggfuzz.cov
+c3e843715ad1531eb41f903b7ad43592.00001fdd.honggfuzz.cov
+d896f4fa8803169045a63005f197ce05.00002000.honggfuzz.cov
+de27eb2920711b26e454a56859f66f2a.00001ff0.honggfuzz.cov
+e695955e0cd13621361855a6d93129b0.00002000.honggfuzz.cov
+ee4888a0b204731f0b1090bc012da986.00002000.honggfuzz.cov
+in
+
+Running RepeatedBytesTest ...
+SUCCESS: RepeatedBytesTest 0m1,022s
+Running RepeatedMemcmp ...
+FAIL: RepeatedMemcmp
+40066666666666664006666666666666.00000010.honggfuzz.cov
+448a855edeefda0f4dac49195b072324.00000075.honggfuzz.cov
+5166663c66663c662666366c66366c66.0000003b.honggfuzz.cov
+5563c392c0cdedf0d50a47bd0782aa2f.00001bf2.honggfuzz.cov
+58618666666666665861866666666666.00000020.honggfuzz.cov
+5888888888f399b996c6c6c6c68b1999.0000000d.honggfuzz.cov
+61b106816531693a7a8626b7d90a0420.00000032.honggfuzz.cov
+71576606f06f01a652bc88e6eb5629f7.00000031.honggfuzz.cov
+78768ad9f0d01f62aaa314a8d04033fc.00000033.honggfuzz.cov
+79999999e000000079999999e0000000.00000004.honggfuzz.cov
+8c2a3bef41e04b9fb2c9070310f50244.00000dab.honggfuzz.cov
+a5cecd03c37faa0ba6436ee2b9dcac4c.0000003b.honggfuzz.cov
+be097aacf71abb9da52162bcc9ed2115.00001916.honggfuzz.cov
+cab9cedf074c0d88b6b78c73dd847c89.000011d0.honggfuzz.cov
+d29572998b35f2d1a492d2386961bf39.00000030.honggfuzz.cov
+e1b1debedc30e000e00c5ebed1b15000.00000006.honggfuzz.cov
+e73e13be482d9e7c6c4eea0168e56f99.00001ead.honggfuzz.cov
+e8c079a23be919e079b93bf219e0e8c0.00000007.honggfuzz.cov
+f6447b35c64a28623f5bf46b7ef8bc88.0000139f.honggfuzz.cov
+f65aa21e21b94d52e9d70aaef721a35b.00000069.honggfuzz.cov
+f84ddff920ca2bba0f8422274bac4c5d.00001b5c.honggfuzz.cov
+fb99999999999999fb99999999999999.00000008.honggfuzz.cov
+in
+
+Running SimpleCmpTest ...
+SUCCESS: SimpleCmpTest 0m1,022s
+Running SimpleDictionaryTest ...
+FAIL: SimpleDictionaryTest
+28c3be96788888ad245efd767bd39393.00000014.honggfuzz.cov
+40066666666666664006666666666666.00000010.honggfuzz.cov
+4cccccf85570b280c04c4867b2dddd90.0000000f.honggfuzz.cov
+79999999e000000079999999e0000000.00000004.honggfuzz.cov
+7a569bdeee7e7eee8a6e30fd8cee7e7e.0000000c.honggfuzz.cov
+956cb81cea14874142d4168da3512df7.00000012.honggfuzz.cov
+a73ada97cde4872ac7d78b9ca363a4e8.00000012.honggfuzz.cov
+ad6666911e70b24a034c48cc996666da.0000000f.honggfuzz.cov
+fbd054ccea14bd71fa7e5e04b3512df7.00000012.honggfuzz.cov
+in
+
+Running SimpleHashTest ...
+SUCCESS: SimpleHashTest 0m5,623s
+Running SimpleTest ...
+SUCCESS: SimpleTest 0m1,024s
+Running SimpleTestStdio ...
+SUCCESS: SimpleTestStdio 0m1,025s
+Running SingleByteInputTest ...
+SUCCESS: SingleByteInputTest 0m1,024s
+Running SingleMemcmpTest ...
+SUCCESS: SingleMemcmpTest 0m1,024s
+Running SingleStrcmpTest ...
+SUCCESS: SingleStrcmpTest 0m1,024s
+Running SingleStrncmpTest ...
+SUCCESS: SingleStrncmpTest 0m1,024s
+Running StrcmpTest ...
+SUCCESS: StrcmpTest 0m1,023s
+Running StrncmpTest ...
+SUCCESS: StrncmpTest 0m1,220s
+Running StrstrTest ...
+SUCCESS: StrstrTest 0m1,021s
+Running SwapCmpTest ...
+SUCCESS: SwapCmpTest 0m1,020s
+Running Switch2Test ...
+SUCCESS: Switch2Test 0m1,024s
+Running Switch3Test ...
+SUCCESS: Switch3Test 0m1,623s
+Running SwitchTest ...
+SUCCESS: SwitchTest 0m1,420s
+Running TableLookupTest ...
+SUCCESS: TableLookupTest 0m1,024s
+Running ThreeBytes ...
+SUCCESS: ThreeBytes 0m8,623s
+Running ThreeFunctionsTest ...
+SUCCESS: ThreeFunctionsTest 0m1,024s
+Done! SUCCESS=31 FAIL=5

@@ -1,0 +1,220 @@
+Fuzzer: afl++-qemu
+Maximum runtime: 120
+
+Preparation:
+CC=clang
+CFLAGS=-O0 -D__AFL_COMPILER=1
+CFLAGS=-O0 -D__AFL_COMPILER=1
+clang++ -O0 -D__AFL_COMPILER=1     AbsNegAndConstant64Test.cpp   -o AbsNegAndConstant64Test
+clang++ -O0 -D__AFL_COMPILER=1     AbsNegAndConstantTest.cpp   -o AbsNegAndConstantTest
+clang++ -O0 -D__AFL_COMPILER=1     CallerCalleeTest.cpp   -o CallerCalleeTest
+clang++ -O0 -D__AFL_COMPILER=1     CleanseTest.cpp   -o CleanseTest
+clang++ -O0 -D__AFL_COMPILER=1     CounterTest.cpp   -o CounterTest
+clang++ -O0 -D__AFL_COMPILER=1     CxxStringEqTest.cpp   -o CxxStringEqTest
+clang++ -O0 -D__AFL_COMPILER=1     DeepRecursionTest.cpp   -o DeepRecursionTest
+clang++ -O0 -D__AFL_COMPILER=1     FourIndependentBranchesTest.cpp   -o FourIndependentBranchesTest
+clang++ -O0 -D__AFL_COMPILER=1     FullCoverageSetTest.cpp   -o FullCoverageSetTest
+clang++ -O0 -D__AFL_COMPILER=1     KeepSeedTest.cpp   -o KeepSeedTest
+clang++ -O0 -D__AFL_COMPILER=1     Labels20Test.cpp   -o Labels20Test
+clang++ -O0 -D__AFL_COMPILER=1     Memcmp64BytesTest.cpp   -o Memcmp64BytesTest
+clang++ -O0 -D__AFL_COMPILER=1     MemcmpTest.cpp   -o MemcmpTest
+clang++ -O0 -D__AFL_COMPILER=1     MultipleConstraintsOnSmallInputTest.cpp   -o MultipleConstraintsOnSmallInputTest
+clang++ -O0 -D__AFL_COMPILER=1     OnlySomeBytesTest.cpp   -o OnlySomeBytesTest
+clang++ -O0 -D__AFL_COMPILER=1     RepeatedBytesTest.cpp   -o RepeatedBytesTest
+clang++ -O0 -D__AFL_COMPILER=1     RepeatedMemcmp.cpp   -o RepeatedMemcmp
+clang++ -O0 -D__AFL_COMPILER=1     SimpleCmpTest.cpp   -o SimpleCmpTest
+clang++ -O0 -D__AFL_COMPILER=1     SimpleDictionaryTest.cpp   -o SimpleDictionaryTest
+clang++ -O0 -D__AFL_COMPILER=1     SimpleHashTest.cpp   -o SimpleHashTest
+clang++ -O0 -D__AFL_COMPILER=1     SimpleTest.cpp   -o SimpleTest
+clang++ -O0 -D__AFL_COMPILER=1     SimpleTestStdio.cpp   -o SimpleTestStdio
+clang++ -O0 -D__AFL_COMPILER=1     SingleByteInputTest.cpp   -o SingleByteInputTest
+clang++ -O0 -D__AFL_COMPILER=1     SingleMemcmpTest.cpp   -o SingleMemcmpTest
+clang++ -O0 -D__AFL_COMPILER=1     SingleStrcmpTest.cpp   -o SingleStrcmpTest
+clang++ -O0 -D__AFL_COMPILER=1     SingleStrncmpTest.cpp   -o SingleStrncmpTest
+clang++ -O0 -D__AFL_COMPILER=1     StrcmpTest.cpp   -o StrcmpTest
+clang++ -O0 -D__AFL_COMPILER=1     StrncmpTest.cpp   -o StrncmpTest
+clang++ -O0 -D__AFL_COMPILER=1     StrstrTest.cpp   -o StrstrTest
+clang++ -O0 -D__AFL_COMPILER=1     SwapCmpTest.cpp   -o SwapCmpTest
+clang++ -O0 -D__AFL_COMPILER=1     Switch2Test.cpp   -o Switch2Test
+clang++ -O0 -D__AFL_COMPILER=1     Switch3Test.cpp   -o Switch3Test
+clang++ -O0 -D__AFL_COMPILER=1     SwitchTest.cpp   -o SwitchTest
+clang++ -O0 -D__AFL_COMPILER=1     TableLookupTest.cpp   -o TableLookupTest
+clang++ -O0 -D__AFL_COMPILER=1     ThreeBytes.cpp   -o ThreeBytes
+clang++ -O0 -D__AFL_COMPILER=1     ThreeFunctionsTest.cpp   -o ThreeFunctionsTest
+
+Starting tests
+Fuzzer special options: -l 3
+Running AbsNegAndConstant64Test ...
+SUCCESS: AbsNegAndConstant64Test 1m26,056s
+Running AbsNegAndConstantTest ...
+SUCCESS: AbsNegAndConstantTest 0m3,002s
+Running CallerCalleeTest ...
+SUCCESS: CallerCalleeTest 0m33,604s
+Running CleanseTest ...
+SUCCESS: CleanseTest 0m4,069s
+Running CounterTest ...
+SUCCESS: CounterTest 0m38,072s
+Running CxxStringEqTest ...
+FAIL: CxxStringEqTest
+id:000000,time:0,orig:in
+
+Running DeepRecursionTest ...
+FAIL: DeepRecursionTest
+id:000000,time:0,orig:in
+id:000001,src:000000,time:795,op:its,pos:0,+cov
+id:000002,src:000000,time:1054,op:its,pos:0,+cov
+id:000003,src:000002,time:2421,op:its,rep:4
+id:000004,src:000002,time:2751,op:its,rep:4
+id:000005,src:000003+000001,time:6469,op:splice,rep:8
+id:000006,src:000003,time:6661,op:havoc,rep:8,+cov
+id:000007,src:000005+000002,time:78757,op:splice,rep:2
+
+Running FourIndependentBranchesTest ...
+SUCCESS: FourIndependentBranchesTest 0m1,737s
+Running FullCoverageSetTest ...
+SUCCESS: FullCoverageSetTest 0m2,064s
+Running KeepSeedTest ...
+SUCCESS: KeepSeedTest 1m58,206s
+Running Labels20Test ...
+SUCCESS: Labels20Test 0m9,656s
+Running Memcmp64BytesTest ...
+FAIL: Memcmp64BytesTest
+id:000000,time:0,orig:in
+id:000001,src:000000,time:976,op:havoc,rep:16,+cov
+
+Running MemcmpTest ...
+FAIL: MemcmpTest
+id:000000,time:0,orig:in
+id:000001,src:000000,time:1049,op:havoc,rep:16,+cov
+id:000002,src:000000,time:1220,op:havoc,rep:8,+cov
+id:000003,src:000000,time:1280,op:havoc,rep:8,+cov
+id:000004,src:000001+000002,time:42431,op:splice,rep:4,+cov
+
+Running MultipleConstraintsOnSmallInputTest ...
+FAIL: MultipleConstraintsOnSmallInputTest
+id:000000,time:0,orig:in
+id:000001,src:000000,time:1206,op:havoc,rep:8,+cov
+id:000002,src:000000+000001,time:1439,op:splice,rep:4,+cov
+id:000003,src:000000+000001,time:1446,op:splice,rep:2,+cov
+id:000004,src:000000+000001,time:1471,op:splice,rep:4,+cov
+id:000005,src:000000+000001,time:1504,op:splice,rep:4,+cov
+id:000006,src:000000+000001,time:1543,op:splice,rep:4,+cov
+id:000007,src:000000+000001,time:1611,op:splice,rep:4,+cov
+id:000008,src:000000+000001,time:2042,op:splice,rep:8,+cov
+id:000009,src:000005+000002,time:5552,op:splice,rep:16,+cov
+id:000010,src:000008,time:7850,op:havoc,rep:2,+cov
+id:000011,src:000008,time:8090,op:havoc,rep:16,+cov
+id:000012,src:000007,time:11171,op:havoc,rep:4,+cov
+id:000013,src:000012,time:15053,op:havoc,rep:4,+cov
+id:000014,src:000013,time:16569,op:havoc,rep:2,+cov
+id:000015,src:000013,time:32138,op:havoc,rep:2,+cov
+id:000016,src:000015,time:33991,op:havoc,rep:4,+cov
+id:000017,src:000015,time:34032,op:havoc,rep:2,+cov
+
+Running OnlySomeBytesTest ...
+FAIL: OnlySomeBytesTest
+id:000000,time:0,orig:in
+
+Running RepeatedBytesTest ...
+SUCCESS: RepeatedBytesTest 0m10,472s
+Running RepeatedMemcmp ...
+FAIL: RepeatedMemcmp
+id:000000,time:0,orig:in
+id:000001,src:000000,time:413,op:its,pos:0,+cov
+id:000002,src:000000,time:6332,op:its,pos:0,+cov
+id:000003,src:000000,time:12476,op:havoc,rep:8
+id:000004,src:000000,time:12494,op:havoc,rep:4
+id:000005,src:000000,time:12505,op:havoc,rep:16
+id:000006,src:000000,time:12522,op:havoc,rep:8
+id:000007,src:000000,time:12575,op:havoc,rep:16,+cov
+id:000008,src:000000,time:12699,op:havoc,rep:8
+id:000009,src:000000,time:12867,op:havoc,rep:8
+id:000010,src:000000,time:12944,op:havoc,rep:8
+id:000011,src:000000,time:13796,op:havoc,rep:8
+id:000012,src:000000,time:25726,op:havoc,rep:8
+id:000013,src:000001+000002,time:45646,op:splice,rep:4
+id:000014,src:000001+000012,time:45945,op:splice,rep:2
+id:000015,src:000002+000013,time:61785,op:splice,rep:2
+
+Running SimpleCmpTest ...
+FAIL: SimpleCmpTest
+id:000000,time:0,orig:in
+id:000001,src:000000,time:2730,op:havoc,rep:4,+cov
+id:000002,src:000001,time:3343,op:its,rep:8,+cov
+id:000003,src:000001,time:3612,op:its,rep:8,+cov
+id:000004,src:000003,time:6101,op:havoc,rep:8,+cov
+id:000005,src:000004,time:8197,op:its,rep:16,+cov
+id:000006,src:000004,time:8204,op:its,rep:16,+cov
+id:000007,src:000006,time:11869,op:havoc,rep:4,+cov
+
+Running SimpleDictionaryTest ...
+FAIL: SimpleDictionaryTest
+id:000000,time:0,orig:in
+id:000001,src:000000,time:3137,op:havoc,rep:4,+cov
+id:000002,src:000000,time:3153,op:havoc,rep:2,+cov
+id:000003,src:000002+000001,time:4883,op:splice,rep:8
+id:000004,src:000002+000003,time:13550,op:splice,rep:4
+id:000005,src:000002+000004,time:91437,op:splice,rep:4
+id:000006,src:000002+000005,time:98134,op:splice,rep:2
+
+Running SimpleHashTest ...
+FAIL: SimpleHashTest
+id:000000,time:0,orig:in
+id:000001,src:000000,time:3427,op:havoc,rep:4,+cov
+id:000002,src:000000,time:3436,op:havoc,rep:4
+id:000003,src:000000,time:3442,op:havoc,rep:4
+
+Running SimpleTest ...
+SUCCESS: SimpleTest 0m4,918s
+Running SimpleTestStdio ...
+SUCCESS: SimpleTestStdio 0m3,815s
+Running SingleByteInputTest ...
+SUCCESS: SingleByteInputTest 0m0,883s
+Running SingleMemcmpTest ...
+SUCCESS: SingleMemcmpTest 0m0,974s
+Running SingleStrcmpTest ...
+SUCCESS: SingleStrcmpTest 0m1,238s
+Running SingleStrncmpTest ...
+SUCCESS: SingleStrncmpTest 0m1,234s
+Running StrcmpTest ...
+SUCCESS: StrcmpTest 0m5,638s
+Running StrncmpTest ...
+SUCCESS: StrncmpTest 0m7,674s
+Running StrstrTest ...
+SUCCESS: StrstrTest 0m4,133s
+Running SwapCmpTest ...
+SUCCESS: SwapCmpTest 0m5,021s
+Running Switch2Test ...
+SUCCESS: Switch2Test 0m4,958s
+Running Switch3Test ...
+SUCCESS: Switch3Test 0m2,979s
+Running SwitchTest ...
+FAIL: SwitchTest
+id:000000,time:0,orig:in
+id:000001,src:000000,time:2212,op:havoc,rep:16,+cov
+id:000002,src:000000,time:2249,op:havoc,rep:16,+cov
+id:000003,src:000000,time:2344,op:havoc,rep:16,+cov
+id:000004,src:000000,time:2768,op:havoc,rep:16,+cov
+id:000005,src:000000,time:4255,op:havoc,rep:8,+cov
+id:000006,src:000000,time:4364,op:havoc,rep:16,+cov
+id:000007,src:000002,time:12965,op:havoc,rep:2,+cov
+id:000008,src:000004+000007,time:30170,op:MOpt_splice,rep:2,+cov
+id:000009,src:000008+000003,time:31677,op:splice,rep:4,+cov
+id:000010,src:000009,time:34375,op:havoc,rep:16,+cov
+id:000011,src:000009,time:36588,op:havoc,rep:8,+cov
+id:000012,src:000011+000000,time:62110,op:MOpt_splice,rep:4,+cov
+id:000013,src:000012+000004,time:71558,op:MOpt_splice,rep:2,+cov
+
+Running TableLookupTest ...
+FAIL: TableLookupTest
+id:000000,time:0,orig:in
+id:000001,src:000000,time:1771,op:havoc,rep:16,+cov
+
+Running ThreeBytes ...
+FAIL: ThreeBytes
+id:000000,time:0,orig:in
+id:000001,src:000000,time:961,op:havoc,rep:16,+cov
+
+Running ThreeFunctionsTest ...
+SUCCESS: ThreeFunctionsTest 0m6,382s
+Done! SUCCESS=23 FAIL=13
