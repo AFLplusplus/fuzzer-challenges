@@ -17,6 +17,7 @@ The fuzzers and necessary compilers must be in the path: `afl-clang-fast`, `afl-
 
 `TARGET` can be (currently) one of:
   * afl++
+  * afl++-qemu
   * honggfuzz
   * libfuzzer
 
