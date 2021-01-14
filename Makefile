@@ -10,5 +10,5 @@ compile:	$(TARGETS)
 	$(CC) $(CFLAGS) -o $@ $@.c
 
 clean:
-	rm -f $(TARGETS) core* *~ *.log
+	rm -f $(TARGETS) core* *~ *.log HONGGFUZZ.REPORT.TXT SIG* afl++.dic
 	rm -rf out-* in

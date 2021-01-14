@@ -3,7 +3,7 @@
 Test a fuzzer what fuzzing challenges it can solve.
 The goal is to have testcases that afl++ can all complete - once they are all implemented.
 The comparisons to honggfuzz and libfuzzer are biased, as the testcases are how afl-fuzz sees things.
-The `libfuzzer/` directories has libfuzzer's own testcases, of which afl++ is only able to solve 45%.
+The `libfuzzer/` directories has libfuzzer's applicable own testcases, of which afl++ is only able to solve 64% (vs 86% honggfuzz and 92% libfuzzer).
 
 ## Setup
 

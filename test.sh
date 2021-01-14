@@ -6,7 +6,7 @@
 FUZZER=afl++
 
 # how many seconds to try each testcase, recommended: 10-30
-RUNTIME=45
+RUNTIME=120
 
 # test a fuzzer in a specific directory? you can put that here
 #FUZZER_DIR=~/AFLplusplus/branches/cmplog_variant
@@ -48,6 +48,7 @@ echo
 
 # prepare environment
 echo Preparation:
+export CFLAGS="-O0 $CFLAGS"
 echo CC=$CC
 echo CFLAGS=$CFLAGS
 env|grep AFL_
