@@ -18,10 +18,10 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
   if (len < 50) bail("too short", 0);
 
-  for (i = 0; i < 4; i++) {
+  for (i = 0; i < 3; i++) {
     p80 = (long double *)(buf + i * 10);
-    lesser = 1000000.1 + 10011.0 * i + i;
-    greater = 1000009.9 + 10011.0 * i - i;
+    lesser = 1000000.01 + 10011.0 * i + i;
+    greater = 1000010.99 + 10011.0 * i - i;
     if (*p80 < lesser || *p80 > greater) bail("wrong long double", (i * 10));
     if (!isnormal(*p80)) bail("not normal", (i * 10));
   }
@@ -30,9 +30,9 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
   // testcases out
 
   // exact
-  p80 = (long double *)(buf + 40);
-  if (*p80 != 3.141592653589793116) bail("wrong long double", 40);
-  if (!isnormal(*p80)) bail("not normal", 40);
+  p80 = (long double *)(buf + 30);
+  if (*p80 != 3.141592653589793116) bail("wrong long double", 30);
+  if (!isnormal(*p80)) bail("not normal", 30);
 
   abort();
 

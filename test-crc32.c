@@ -45,10 +45,11 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
   if (buff[1] != 'A') bail("wrong char", 1);
   if (buff[2] != 'R') bail("wrong char", 2);
   if (buff[3] != 'F') bail("wrong char", 3);
-  for (i = 1; i <= 8; i++) {
+  for (i = 1; i < 4; i++) {
     buff[i * 4 - 1] = 'E' + i;  // no duplicate crc
     crc = crc32(buff, i * 4);
     p32 = (uint32_t *)(buff + i * 4);
+    printf("Expecting: %x\n", crc);
     if (*p32 != crc) bail("wrong crc32", (i * 4));
   }
 

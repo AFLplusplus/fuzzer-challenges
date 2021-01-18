@@ -18,9 +18,14 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
   if (len < 32) bail("too short", 0);
 
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < 3; i++) {
     p32 = (uint32_t *)(buf + i * 4);
     if (*p32 != (0x10000 * i) + 'A' + i) bail("wrong u32", (i * 4));
+  }
+
+  for (i = 3; i < 6; i++) {
+    p32 = (uint32_t *)(buf + i * 4);
+    if (*p32 != (0x10000 * i) + 'A' + (i << 1)) bail("wrong u32", (i * 4));
   }
 
   abort();

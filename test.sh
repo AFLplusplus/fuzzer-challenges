@@ -15,6 +15,12 @@ RUNTIME=120
 #################
 
 # cmdline processing
+test "$1" = "-h" && {
+  echo "Syntax: $0 [FUZZER [TESTCASE]]"
+  echo Fuzzers: afl++, afl++-qemu, honggfuzz, libfuzzer
+  echo Testcase: instead of processing all, process just this one
+  exit 0
+}
 test -z "$1" && { echo Warning: no target given - assuming afl++ - available: afl++, afl++-qemu, honggfuzz, libfuzzer; echo; }
 test -n "$1" && FUZZER=$1
 DONE=
@@ -26,6 +32,7 @@ test "$FUZZER" = "afl++" && {
   export AFL_LLVM_CMPLOG=1
   export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
   export CMPLOG_LVL=3
+  export FUZZER_OPTIONS="-Z"
   DONE=1
 }
 test "$FUZZER" = "afl++-qemu" && { 
@@ -33,6 +40,7 @@ test "$FUZZER" = "afl++-qemu" && {
   export CXX=clang++
   export CFLAGS=-D__AFL_COMPILER=1
   export CMPLOG_LVL=3
+  export FUZZER_OPTIONS="-Z"
   DONE=1
 }
 test "$FUZZER" = "libfuzzer" && { 
@@ -92,72 +100,78 @@ echo Fuzzer special options: $FUZZER_OPTIONS
 
 # run test cases
 for i in *.c*; do
+
   TARGET=${i//\.c*/}
-  test -x "$TARGET" && {
-    echo Running $TARGET ...
+  test -z "$2" -o "$2" = "$TARGET" && {
 
-    test "$FUZZER" = afl++ && {
-      TIME=`{ time afl-fuzz -x afl++.dic $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
-      ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
-        echo SUCCESS: $TARGET $TIME
-        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
-        SUCCESS=$((SUCCESS + 1))
-      } || {
-        echo FAIL: $TARGET
-        ls out-$TARGET/default/queue
-        echo 
-        FAIL=$((FAIL + 1))
-      }
-    }
+    test -x "$TARGET" && {
+      echo Running $TARGET ...
 
-    test "$FUZZER" = afl++-qemu && {
-      TIME=`{ time afl-fuzz -Q $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c 0 -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
-      ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
-        echo SUCCESS: $TARGET $TIME
-        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
-        SUCCESS=$((SUCCESS + 1))
-      } || {
-        echo FAIL: $TARGET
-        ls out-$TARGET/default/queue
-        echo 
-        FAIL=$((FAIL + 1))
+      test "$FUZZER" = afl++ && {
+        TIME=`{ time afl-fuzz -x afl++.dic $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
+          echo SUCCESS: $TARGET $TIME
+          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
+          SUCCESS=$((SUCCESS + 1))
+        } || {
+          echo FAIL: $TARGET
+          ls out-$TARGET/default/queue
+          echo 
+          FAIL=$((FAIL + 1))
+        }
       }
-    }
 
-    test "$FUZZER" = honggfuzz && {
-      cp -r in out-$TARGET
-      TIME=`{ time honggfuzz $FUZZER_OPTIONS --run_time $RUNTIME -q --exit_upon_crash -i out-$TARGET -s -v -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
-      ls SIG* >/dev/null 2>&1 && {
-        echo SUCCESS: $TARGET $TIME
-        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
-        rm -f SIG* HONGGFUZZ.REPORT.TXT 
-        SUCCESS=$((SUCCESS + 1))
-      } || {
-        echo FAIL: $TARGET
-        ls out-$TARGET/
-        echo 
-        FAIL=$((FAIL + 1))
+      test "$FUZZER" = afl++-qemu && {
+        TIME=`{ time afl-fuzz -Q $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c 0 -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
+          echo SUCCESS: $TARGET $TIME
+          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
+          SUCCESS=$((SUCCESS + 1))
+        } || {
+          echo FAIL: $TARGET
+          ls out-$TARGET/default/queue
+          echo 
+          FAIL=$((FAIL + 1))
+        }
       }
-    }
 
-    test "$FUZZER" = libfuzzer && {
-      cp -r in out-$TARGET
-      # -use_value_profile=1 decreases the performance
-      TIME=`{ time ./$TARGET $FUZZER_OPTIONS -timeout=1 -detect_leaks=0 -max_total_time=$RUNTIME -workers=0 >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
-      ls crash* >/dev/null 2>&1 && {
-        echo SUCCESS: $TARGET $TIME
-        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
-        rm -f crash*
-        SUCCESS=$((SUCCESS + 1))
-      } || {
-        echo FAIL: $TARGET
-        ls out-$TARGET/
-        echo 
-        FAIL=$((FAIL + 1))
+      test "$FUZZER" = honggfuzz && {
+        cp -r in out-$TARGET
+        TIME=`{ time honggfuzz $FUZZER_OPTIONS --run_time $RUNTIME -q --exit_upon_crash -i out-$TARGET -s -v -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        ls SIG* >/dev/null 2>&1 && {
+          echo SUCCESS: $TARGET $TIME
+          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
+          rm -f SIG* HONGGFUZZ.REPORT.TXT 
+          SUCCESS=$((SUCCESS + 1))
+        } || {
+          echo FAIL: $TARGET
+          ls out-$TARGET/
+          echo 
+          FAIL=$((FAIL + 1))
+        }
       }
+
+      test "$FUZZER" = libfuzzer && {
+        cp -r in out-$TARGET
+        # -use_value_profile=1 decreases the performance
+        TIME=`{ time ./$TARGET $FUZZER_OPTIONS -timeout=1 -detect_leaks=0 -max_total_time=$RUNTIME -workers=0 >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        ls crash* >/dev/null 2>&1 && {
+          echo SUCCESS: $TARGET $TIME
+          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
+          rm -f crash*
+          SUCCESS=$((SUCCESS + 1))
+        } || {
+          echo FAIL: $TARGET
+          ls out-$TARGET/
+          echo 
+          FAIL=$((FAIL + 1))
+        }
+      }
+
     }
 
   }
+
 done
 
 echo "Done! SUCCESS=$SUCCESS FAIL=$FAIL"
