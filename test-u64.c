@@ -12,16 +12,21 @@
   }
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
-  uint64_t *p64, v64, i, j;
-  uint8_t * p = (uint8_t *)&v64;
+  uint64_t *p64;
 
-  for (i = 0; i < 4; i++) {
-    if (len < 8 + i * 8) bail("too short", i * 8);
-    p64 = (uint64_t *)(buf + i * 8);
-    for (j = 0; j < sizeof(v64); j++)
-      p[j] = '0' + i * 2 + j * 3;
-    if (*p64 != v64) bail("wrong u64", (i * 8));
-  }
+  if (len < 32) bail("too short", 0);
+
+  p64 = (uint64_t *)(buf);
+  if (*p64 != 0x1122334455667788) bail("wrong u64", 0);
+
+  p64 = (uint64_t *)(buf + 8);
+  if (*p64 != 0xa0a1a2a3a4a5a6a7) bail("wrong u64", 8);
+
+  p64 = (uint64_t *)(buf + 16);
+  if (*p64 != 0x1234aabbccddeeff) bail("wrong u64", 16);
+
+  p64 = (uint64_t *)(buf + 24);
+  if (*p64 != 0x0f1f2f3f4f5f6f7f) bail("wrong u64", 24);
 
   abort();
 

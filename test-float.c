@@ -13,33 +13,27 @@
   }
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
-  float *  p32, lesser, greater;
-  uint32_t i;
+  float *p32, lesser, greater;
 
-  if (len < 20) bail("too short", 0);
+  if (len < 16) bail("too short", 0);
 
-  // easy
-  for (i = 0; i < 2; i++) {
-    p32 = (float *)(buf + i * 4);
-    lesser = 10002.1 + 1000.0 * i + i;
-    greater = 10008.9 + 1000.0 * i - i;
-    if (*p32 < lesser || *p32 > greater) bail("wrong float", (i * 4));
-    if (!isnormal(*p32)) bail("not normal float", (i * 4));
-  }
+  p32 = (float *)(buf);
+  lesser = 1000000.01;
+  greater = 1000010.99;
+  if (*p32 < lesser || *p32 > greater) bail("wrong float", 0);
+  if (!isnormal(*p32)) bail("not normal", 0);
 
-  // harder
-  for (i = 2; i < 4; i++) {
-    p32 = (float *)(buf + i * 4);
-    lesser = 100000.25 + 2222.0 * i + i;
-    greater = 100015.75 + 2222.0 * i - i;
-    if (*p32 <= lesser || *p32 >= greater) bail("wrong float", (i * 4));
-    if (!isnormal(*p32)) bail("not normal float", (i * 4));
-  }
+  p32 = (float *)(buf + 4);
+  lesser = 101.9;
+  greater = 109.0;
+  if (*p32 < lesser || *p32 > greater) bail("wrong float", 4);
+  if (!isnormal(*p32)) bail("not normal", 4);
 
-  // exact
-  p32 = (float *)(buf + 16);
-  if (*p32 != 31337.3125) bail("wrong float", 16);
-  if (!isnormal(*p32)) bail("not normal float", 16);
+  p32 = (float *)(buf + 8);
+  lesser = 22222221.9;
+  greater = 22222225.1;
+  if (*p32 < lesser || *p32 > greater) bail("wrong float", 8);
+  if (!isnormal(*p32)) bail("not normal", 8);
 
   abort();
 

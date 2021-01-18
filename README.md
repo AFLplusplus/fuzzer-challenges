@@ -48,27 +48,27 @@ On failure the generated corpus files are displayed (so you can see how many fin
 
 ## Test as of 11th January 2021
 
-All from current repository state (afl++_vX is the cmplog_variant branch with -l option value X).
+All from current repository state (afl++_vX is the cmplog_merge branch with -l option value X).
 Solve time: 120 seconds
 
 |testcase|afl++_v3|afl++_v2|afl++_v1|afl++_dev|afl++_stable|honggfuzz-2.3|libfuzzer-12|
 |:------:|:------:|:------:|:------:|:-------:|:----------:|:-----------:|:----------:|
-|test-crc32|0m5,596s|0m3,708s|0m58,924s|0m5,477s|0m5,251s|FAIL|FAIL|
-|test-double|0m1,032s|0m15,414s|1m14,064s|FAIL|FAIL|FAIL|FAIL|
-|test-extint|0m1,663s|0m1,051s|0m6,988s|FAIL|FAIL|FAIL|FAIL|
-|test-float|0m1,650s|0m34,206s|0m47,023s|FAIL|FAIL|FAIL|FAIL|
-|test-longdouble|0m1,241s|0m1,651s|0m15,159s|FAIL|FAIL|FAIL|FAIL|
-|test-memcmp|0m0,622s|0m0,835s|0m7,031s|0m0,893s|0m1,087s|0m1,023s|0m0,089s|
-|test-strcmp|0m0,623s|0m0,624s|0m4,745s|FAIL|0m1,091s|0m1,220s|0m13,757s|
-|test-transform|FAIL|FAIL|FAIL|FAIL|FAIL|0m31,420s|FAIL|
-|test-u128|0m0,418s|0m0,416s|0m2,272s|FAIL|FAIL|FAIL|FAIL|
-|test-u16|0m1,233s|0m1,442s|0m18,811s|0m1,928s|0m2,135s|FAIL|FAIL|
-|test-u32|0m1,434s|0m1,641s|0m12,085s|FAIL|FAIL|FAIL|FAIL|
-|test-u32-cmp|0m1,068s|0m14,712s|0m16,021s|FAIL|FAIL|FAIL|FAIL|
-|test-u64|0m0,623s|0m0,625s|0m13,063s|0m1,083s|0m0,896s|FAIL|1m24,684s|
-|test-u8|0m1,449s|0m1,259s|0m8,260s|0m2,130s|0m2,139s|FAIL|FAIL|
+|test-crc32|0m5,596s|0m18,083s|0m38,924s|FAIL|FAIL|FAIL|0m55,987s|
+|test-double|0m3,374s|0m2,414s|0m14,064s|0m3,607s|FAIL|FAIL|FAIL|
+|test-extint|0m1,663s|0m1,051s|0m0,988s|FAIL|FAIL|FAIL|FAIL|
+|test-float|0m1,650s|0m1,206s|0m15,023s|0m2,073s|FAIL|FAIL|FAIL|
+|test-longdouble|0m1,241s|0m2,651s|0m15,159s|FAIL|FAIL|FAIL|FAIL|
+|test-memcmp|0m0,622s|0m0,835s|0m13,031s|0m0,893s|0m1,087s|0m1,023s|0m1,269s|
+|test-strcmp|0m0,623s|0m0,624s|0m9,745s|0m1,463s|0m1,091s|0m1,220s|0m1,469s|
+|test-transform|FAIL|FAIL|FAIL|FAIL|FAIL|0m31,420s|0m26,619s|
+|test-u128|0m0,418s|0m0,416s|0m1,272s|FAIL|FAIL|FAIL|FAIL|
+|test-u16|0m1,233s|0m1,442s|0m27,811s|0m1,928s|0m2,135s|0m1,425s|0m12,065s|
+|test-u32|0m1,434s|0m1,641s|0m2,085s|0m2,693s|0m1,873s|0m1,025s|0m6,984s|
+|test-u32-cmp|1m29,184s|0m14,712s|0m53,016s|0m1,446s|0m54,078s|0m1,824s|0m0,759s|
+|test-u64|0m0,623s|0m0,625s|0m4,063s|0m1,083s|0m1,896s|0m1,024s|0m10,346s|
+|test-u8|0m1,449s|0m1,259s|0m43,906s|0m4,130s|0m4,139s|0m1,026s|0m4,382s|
 
-afl++_cmplog_variant has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/).
+afl++_cmplog_merge has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/).
 Interpretation: the **slowest** solver is the best in real-world fuzzing.
 
 ## More testcases or fuzzers?

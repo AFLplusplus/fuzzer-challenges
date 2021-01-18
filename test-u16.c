@@ -12,21 +12,33 @@
   }
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
-  uint8_t * p8;
-  uint16_t *p16, *p16_2;
-  uint32_t *p32, *p32_2, i;
+  uint16_t *p16;
 
   if (len < 16) bail("too short", 0);
 
-  for (i = 0; i < 3; i++) {
-    p16 = (uint16_t *)(buf + i * 2);
-    if (*p16 != (0x100 * i) + 'A' + (i << 1)) bail("wrong u16", (i * 2));
-  }
+  p16 = (uint16_t *)(buf);
+  if (*p16 != 0x1122) bail("wrong u16", 0);
 
-  for (i = 3; i < 6; i++) {
-    p16 = (uint16_t *)(buf + i * 2);
-    if (*p16 != (0x1000 * i) + 'A' + (i << 2)) bail("wrong u16", (i * 2));
-  }
+  p16 = (uint16_t *)(buf + 2);
+  if (*p16 != 0x3344) bail("wrong u16", 2);
+
+  p16 = (uint16_t *)(buf + 4);
+  if (*p16 != 0x5566) bail("wrong u16", 4);
+
+  p16 = (uint16_t *)(buf + 6);
+  if (*p16 != 0x7788) bail("wrong u16", 6);
+
+  p16 = (uint16_t *)(buf + 8);
+  if (*p16 != 0xa0a1) bail("wrong u16", 8);
+
+  p16 = (uint16_t *)(buf + 10);
+  if (*p16 != 0xa2a3) bail("wrong u16", 10);
+
+  p16 = (uint16_t *)(buf + 12);
+  if (*p16 != 0x1234) bail("wrong u16", 12);
+
+  p16 = (uint16_t *)(buf + 14);
+  if (*p16 != 0xaabb) bail("wrong u16", 14);
 
   abort();
 
@@ -35,7 +47,7 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
 #ifdef __AFL_COMPILER
 int main() {
-  unsigned char buf[64];
+  unsigned char buf[16];
   ssize_t       len;
 
   if ((len = read(0, buf, sizeof(buf))) <= 0) exit(0);

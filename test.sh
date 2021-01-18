@@ -70,7 +70,8 @@ env|grep AFL_
 export CXXFLAGS="$CFLAGS $CXXFLAGS"
 export AFL_QUIET=1
 make clean >/dev/null 2>&1
-make compile || exit 1
+test -z "$2" && { make compile || exit 1; }
+test -n "$2" && { make "$2" || exit 1; }
 rm -rf in out-* *.log crash* SIG* HONGGFUZZ.REPORT.TXT
 ulimit -c 0
 mkdir in || exit 1

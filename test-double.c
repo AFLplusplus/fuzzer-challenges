@@ -13,33 +13,35 @@
   }
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
-  double * p64, lesser, greater;
-  uint64_t i;
+  double *p64, lesser, greater;
 
   if (len < 40) bail("too short", 0);
 
-  // easy
-  for (i = 0; i < 2; i++) {
-    p64 = (double *)(buf + i * 8);
-    lesser = 1000000.1 + 10011.0 * i + i;
-    greater = 1000009.9 + 10011.0 * i - i;
-    if (*p64 < lesser || *p64 > greater) bail("wrong double", (i * 8));
-    if (!isnormal(*p64)) bail("not normal double", (i * 8));
-  }
+  p64 = (double *)(buf);
+  lesser = 1000000.01;
+  greater = 1000010.99;
+  if (*p64 < lesser || *p64 > greater) bail("wrong double", 0);
+  if (!isnormal(*p64)) bail("not normal", 0);
 
-  // harder
-  for (i = 2; i < 4; i++) {
-    p64 = (double *)(buf + i * 8);
-    lesser = 300000.1 + 31050.0 * i + i;
-    greater = 300009.9 + 31050.0 * i - i;
-    if (*p64 <= lesser || *p64 >= greater) bail("wrong double", (i * 8));
-    if (!isnormal(*p64)) bail("not normal double", (i * 8));
-  }
+  p64 = (double *)(buf + 8);
+  lesser = 101.9;
+  greater = 109.0;
+  if (*p64 < lesser || *p64 > greater) bail("wrong double", 8);
+  if (!isnormal(*p64)) bail("not normal", 8);
+
+  p64 = (double *)(buf + 16);
+  lesser = 22222221.9;
+  greater = 22222225.1;
+  if (*p64 < lesser || *p64 > greater) bail("wrong double", 16);
+  if (!isnormal(*p64)) bail("not normal", 16);
+
+  // no fuzzer can solve double arithmetic, so we leave the harder
+  // testcases out
 
   // exact
-  p64 = (double *)(buf + 32);
-  if (*p64 != 3.141592653589793116) bail("wrong double", 32);
-  if (!isnormal(*p64)) bail("not normal double", 32);
+  p64 = (double *)(buf + 24);
+  if (*p64 != 3.141592653589793116) bail("wrong double", 24);
+  if (!isnormal(*p64)) bail("not normal", 24);
 
   abort();
 
