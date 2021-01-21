@@ -59,13 +59,13 @@ Solve time: 120 seconds
 |test-extint|0m1,663s|0m1,051s|0m0,988s|FAIL|FAIL|FAIL|
 |test-float|0m1,650s|0m1,206s|0m15,023s|FAIL|FAIL|FAIL|
 |test-longdouble|0m1,241s|0m2,651s|0m15,159s|FAIL|FAIL|FAIL|
-|test-memcmp|0m0,622s|0m0,835s|0m13,031s|FAIL|0m1,023s|0m1,269s|
+|test-memcmp|0m0,622s|0m0,835s|0m13,031s|0m6,494s|0m1,023s|0m1,269s|
 |test-strcmp|0m0,623s|0m0,624s|0m9,745s|0m5,727s|0m1,220s|0m1,469s|
 |test-transform|0m4,334s|FAIL|FAIL|FAIL|FAIL|FAIL|
 |test-u128|0m0,418s|0m0,416s|0m1,272s|FAIL|FAIL|FAIL|
 |test-u16|0m1,233s|0m1,442s|0m27,811s|0m8,132s|0m1,425s|0m12,065s|
 |test-u32|0m1,434s|0m1,641s|0m2,085s|0m5,185s|0m1,025s|0m6,984s|
-|test-u32-cmp|1m29,184s|0m14,712s|0m53,016s|FAIL|0m1,824s|0m0,759s|
+|test-u32-cmp|1m29,184s|0m14,712s|0m53,016s|1m42,470s|0m1,824s|0m0,759s|
 |test-u64|0m0,623s|0m0,625s|0m4,063s|0m3,844s|0m1,024s|0m10,346s|
 |test-u8|0m1,449s|0m1,259s|0m43,906s|0m18,186s|0m1,026s|0m4,382s|
 

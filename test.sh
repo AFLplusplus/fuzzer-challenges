@@ -63,7 +63,7 @@ echo
 
 # prepare environment
 echo Preparation:
-export CFLAGS="-O0 $CFLAGS"
+export CFLAGS="-O0 -fno-inline -fno-builtin $CFLAGS"
 echo CC=$CC
 echo CFLAGS=$CFLAGS
 env|egrep '^AFL_'
