@@ -56,7 +56,7 @@ test "$FUZZER" = "honggfuzz" && {
   DONE=1
 }
 
-test -z "$DONE" && { echo Error: invalid fuzzer, allowed are only afl++, libfuzzer or honggfuzz; exit 1; }
+test -z "$DONE" && { echo Error: invalid fuzzer, allowed are only afl++, afl++-qemu, libfuzzer or honggfuzz; exit 1; }
 echo Fuzzer: $FUZZER
 echo Maximum runtime: $RUNTIME
 echo
@@ -66,7 +66,7 @@ echo Preparation:
 export CFLAGS="-O0 $CFLAGS"
 echo CC=$CC
 echo CFLAGS=$CFLAGS
-env|grep AFL_
+env|egrep '^AFL_'
 export CXXFLAGS="$CFLAGS $CXXFLAGS"
 export AFL_QUIET=1
 make clean >/dev/null 2>&1
