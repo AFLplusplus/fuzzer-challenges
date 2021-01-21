@@ -74,4 +74,4 @@ Interpretation: the **slowest** solver is the best in real-world fuzzing.
 
 ## More testcases or fuzzers?
 
-Just add them and send PR.
+Just add them and send a PR.
