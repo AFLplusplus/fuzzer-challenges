@@ -102,12 +102,13 @@ echo Fuzzer special options: $FUZZER_OPTIONS
 # run test cases
 for i in *.c*; do
 
-  TARGET=${i//\.c*/}
+  TARGET=${i%%.c*}
   test -z "$2" -o "$2" = "$TARGET" && {
 
     test -x "$TARGET" && {
       echo Running $TARGET ...
 
+      test -e ${AFL_TMPDIR}/.cur_input && rm ${AFL_TMPDIR}/.cur_input
       test "$FUZZER" = afl++ && {
         TIME=`{ time afl-fuzz -x afl++.dic $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {

@@ -7,7 +7,7 @@ all:
 compile:	$(TARGETS)
 
 %:	%.c
-	$(CC) $(CFLAGS) -o $@ $@.c
+	$(CC) $(CFLAGS) -o $@ $@.c -lm
 
 clean:
 	rm -f $(TARGETS) core* *~ *.log HONGGFUZZ.REPORT.TXT SIG* afl++.dic
