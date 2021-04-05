@@ -1,4 +1,7 @@
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
@@ -12,12 +15,15 @@
 extern int AllLines[];
 
 bool PrintOnce(int Line) {
+
   if (!AllLines[Line]) fprintf(stderr, "Seen line %d\n", Line);
   AllLines[Line] = 1;
   return true;
+
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+
   if (Size != 21) return 0;
   uint64_t x = 0;
   int64_t  y = 0;
@@ -35,24 +41,34 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
       PrintOnce(__LINE__) && (k32bit || y <= 987654325) &&
       PrintOnce(__LINE__) && z < -10000 && PrintOnce(__LINE__) && z >= -10005 &&
       PrintOnce(__LINE__) && z != -10003 && PrintOnce(__LINE__) && true) {
+
     fprintf(stderr,
             "BINGO; Found the target: size %zd (%zd, %zd, %d, %d), exiting.\n",
             Size, x, y, z, a);
     abort();
+
   }
+
   return 0;
+
 }
 
 int AllLines[__LINE__ + 1];  // Must be the last line.
 
 #ifdef __AFL_COMPILER
-int main() {
+int main(int argc, char **argv) {
+
   unsigned char buf[64];
   ssize_t       len;
+  int           fd = 0;
+  if (argc > 1) fd = open(argv[1], O_RDONLY);
 
   if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
+
 }
+
 #endif
+

@@ -1,4 +1,7 @@
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
@@ -14,10 +17,12 @@ static volatile int Sink;
 
 template <class T>
 bool Switch(const uint8_t *Data, size_t Size) {
+
   T X;
   if (Size < sizeof(X)) return false;
   memcpy(&X, Data, sizeof(X));
   switch (X) {
+
     case 1:
       Sink = __LINE__;
       break;
@@ -41,15 +46,20 @@ bool Switch(const uint8_t *Data, size_t Size) {
       break;
     case 100000001:
       return true;
+
   }
+
   return false;
+
 }
 
 bool ShortSwitch(const uint8_t *Data, size_t Size) {
+
   short X;
   if (Size < sizeof(short)) return false;
   memcpy(&X, Data, sizeof(short));
   switch (X) {
+
     case 42:
       Sink = __LINE__;
       break;
@@ -73,28 +83,42 @@ bool ShortSwitch(const uint8_t *Data, size_t Size) {
       break;
     case 21402:
       return true;
+
   }
+
   return false;
+
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+
   if (Size >= 4 && Switch<int>(Data, Size) && Size >= 12 &&
       Switch<uint64_t>(Data + 4, Size - 4) && Size >= 14 &&
       ShortSwitch(Data + 12, 2)) {
+
     fprintf(stderr, "BINGO; Found the target, exiting\n");
     abort();
+
   }
+
   return 0;
+
 }
 
 #ifdef __AFL_COMPILER
-int main() {
+int main(int argc, char **argv) {
+
   unsigned char buf[64];
   ssize_t       len;
+  int           fd = 0;
+  if (argc > 1) fd = open(argv[1], O_RDONLY);
 
   if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
+
 }
+
 #endif
+

@@ -1,4 +1,7 @@
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
@@ -7,2472 +10,3296 @@
 //
 #include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
 
 // Force noinline, as this test might be interesting for experimenting with
 // data flow tracing approach started in https://reviews.llvm.org/D46666.
 __attribute__((noinline)) int func1(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 15) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func2(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 80) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func3(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 48) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func4(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 & a2)) ^ a3;
   if (v > 44) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func5(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 72) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func6(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 72) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func7(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 43) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func8(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 66) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func9(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func10(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 83) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func11(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 117) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func12(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func13(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 80) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func14(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func15(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 116) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func16(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v <= 0) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func17(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func18(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 28) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func19(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 18) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func20(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 47) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func21(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = (((a1 ^ a2))) & a3;
   if (v > 108) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func22(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func23(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 7) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func24(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v <= 25) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func25(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func26(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 41) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func27(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v <= 14) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func28(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func29(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 48) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func30(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func31(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 45) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func32(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 0) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func33(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func34(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 95) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func35(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 12) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func36(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 121) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func37(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func38(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 61) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func39(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func40(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 125) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func41(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 0) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func42(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = (((a1 ^ a2))) & a3;
   if (v > 66) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func43(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func44(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v <= 0) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func45(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func46(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 106) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func47(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 33) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func48(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 118) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func49(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 58) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func50(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 42) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func51(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 46) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func52(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func53(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 66) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func54(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 23) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func55(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 17) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func56(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 90) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func57(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 63) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func58(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 102) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func59(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 49) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func60(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 26) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func61(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 55) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func62(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 103) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func63(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 0) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func64(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 34) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func65(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 90) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func66(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 4) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func67(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 50) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func68(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 37) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func69(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 48) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func70(uint8_t a1) {
+
   char v = a1 << 6;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func71(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 85) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func72(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 66) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func73(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 30) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func74(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 118) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func75(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 & a2)) | a3;
   if (v <= 59) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func76(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func77(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 30) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func78(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 32) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func79(uint8_t a1) {
+
   char v = 16 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func80(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 ^ a2)) | a3;
   if (v <= 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func81(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v > 120) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func82(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 81) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func83(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v > 119) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func84(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func85(uint8_t a1) {
+
   char v = 2 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func86(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 66) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func87(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 84) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func88(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 118) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func89(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 47) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func90(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 60) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func91(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 13) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func92(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 38) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func93(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 67) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func94(uint8_t a1) {
+
   char v = 16 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func95(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func96(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 67) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func97(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 48) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func98(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 102) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func99(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 96) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func100(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 ^ a2)) | a3;
   if (v != 127) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func101(uint8_t a1) {
+
   char v = 4 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func102(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 43) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func103(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 95) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func104(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = (((a1 ^ a2))) & a3;
   if (v <= 2) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func105(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 65) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func106(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 24) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func107(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func108(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 67) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func109(uint8_t a1) {
+
   char v = 2 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func110(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 101) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func111(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 & a2)) | a3;
   if (v <= 121) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func112(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 40) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func113(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 50) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func114(uint8_t a1) {
+
   char v = a1 << 6;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func115(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 12) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func116(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func117(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 79) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func118(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func119(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 44) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func120(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 & a2)) | a3;
   if (v <= 28) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func121(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 93) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func122(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 40) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func123(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func124(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v <= 0) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func125(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func126(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func127(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 8) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func128(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func129(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 3) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func130(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 102) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func131(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 68) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func132(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 73) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func133(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 68) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func134(uint8_t a1) {
+
   char v = 16 * a1;
   if (v > 125) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func135(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 79) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func136(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 6) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func137(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func138(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func139(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func140(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 74) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func141(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func142(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 89) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func143(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 46) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func144(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 29) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func145(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 77) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func146(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 12) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func147(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func148(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 27) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func149(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func150(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v > 122) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func151(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 3) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func152(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 56) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func153(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 3) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func154(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 43) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func155(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func156(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func157(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func158(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func159(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 88) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func160(uint8_t a1) {
+
   char v = ~a1;
   if (v > 33) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func161(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 46) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func162(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func163(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 & a2)) | a3;
   if (v <= 9) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func164(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 96) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func165(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func166(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func167(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 91) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func168(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func169(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 32) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func170(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 32) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func171(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func172(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func173(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func174(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 90) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func175(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 32) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func176(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 61) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func177(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 33) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func178(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func179(uint8_t a1) {
+
   char v = ~a1;
   if (v > 64) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func180(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 95) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func181(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 48) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func182(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 113) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func183(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 41) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func184(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 63) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func185(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func186(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func187(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 43) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func188(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v <= 57) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func189(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func190(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 103) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func191(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v > 92) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func192(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func193(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 & a2)) | a3;
   if (v <= 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func194(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 20) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func195(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 82) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func196(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v > 117) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func197(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 50) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func198(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 118) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func199(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v == 127) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func200(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func201(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 67) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func202(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 56) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func203(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v > 95) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func204(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func205(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 ^ a2)) | a3;
   if (v > 95) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func206(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 78) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func207(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v <= 7) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func208(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 123) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func209(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func210(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 101) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func211(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 61) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func212(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 73) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func213(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 34) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func214(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func215(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 5) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func216(uint8_t a1) {
+
   char v = ~a1;
   if (v > 85) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func217(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 113) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func218(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v > 61) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func219(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v > 90) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func220(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 106) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func221(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func222(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 84) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func223(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 81) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func224(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func225(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 49) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func226(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func227(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 66) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func228(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 81) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func229(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 41) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func230(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 82) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func231(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 84) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func232(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 34) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func233(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 66) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func234(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 90) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func235(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 73) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func236(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 12) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func237(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 9) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func238(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 42) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func239(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 44) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func240(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 14) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func241(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func242(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 74) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func243(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 102) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func244(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func245(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 87) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func246(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 29) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func247(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 51) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func248(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 74) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func249(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 103) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func250(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 56) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func251(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 11) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func252(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func253(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 22) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func254(uint8_t a1, uint8_t a2, uint8_t a3) {
+
   char v = ((a1 & a2)) | a3;
   if (v > 122) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func255(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 74) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func256(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func257(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 67) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func258(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 102) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func259(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 74) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func260(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 27) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func261(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 58) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func262(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 77) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func263(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 3) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func264(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 13) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func265(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 47) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func266(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 39) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func267(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v == 127) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func268(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 66) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func269(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 47) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func270(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 63) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func271(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 122) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func272(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 65) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func273(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 120) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func274(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 83) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func275(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 99) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func276(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func277(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 42) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func278(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func279(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 110) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func280(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 92) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func281(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 59) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func282(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func283(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func284(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func285(uint8_t a1) {
+
   char v = ~a1;
   if (v > 17) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func286(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func287(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 78) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func288(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 47) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func289(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 90) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func290(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 78) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func291(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 30) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func292(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func293(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func294(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func295(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 17) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func296(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 86) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func297(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 120) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func298(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 46) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func299(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 63) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func300(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 5) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func301(uint8_t a1) {
+
   char v = ~a1;
   if (v > 17) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func302(uint8_t a1) {
+
   char v = ~a1;
   if (v > 113) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func303(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func304(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 73) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func305(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 60) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func306(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 119) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func307(uint8_t a1) {
+
   char v = ~a1;
   if (v > 21) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func308(uint8_t a1) {
+
   char v = ~a1;
   if (v > 107) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func309(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 44) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func310(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 57) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func311(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 59) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func312(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func313(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func314(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 58) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func315(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func316(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 101) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func317(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 99) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func318(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 78) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func319(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 16) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func320(uint8_t a1) {
+
   char v = ~a1;
   if (v > 10) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func321(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func322(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 3) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func323(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func324(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v > 118) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func325(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func326(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 0) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func327(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 101) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func328(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 18) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func329(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func330(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 0) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func331(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 67) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func332(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 103) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func333(uint8_t a1) {
+
   char v = 16 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func334(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 38) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func335(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func336(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func337(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v > 63) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func338(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func339(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v <= 47) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func340(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v <= 0) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func341(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func342(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v > 118) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func343(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 58) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func344(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 91) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func345(uint8_t a1) {
+
   char v = 16 * a1;
   if (v <= 72) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func346(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 63) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func347(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func348(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func349(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v <= 57) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func350(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func351(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 99) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func352(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v > 63) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func353(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 81) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func354(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func355(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v > 118) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func356(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func357(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 72) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func358(uint8_t a1) {
+
   char v = 16 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func359(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 110) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func360(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func361(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 68) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func362(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v > 91) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func363(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func364(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 99) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func365(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v <= 40) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func366(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v <= 31) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func367(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func368(uint8_t a1) {
+
   char v = a1 >> 5;
   if (v > 96) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func369(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func370(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 42) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func371(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 118) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func372(uint8_t a1) {
+
   char v = (char)a1 >> 1;
   if (v > 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func373(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func374(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func375(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 64) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func376(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 110) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func377(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 104) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func378(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v > 112) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func379(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 62) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func380(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 48) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func381(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 58) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func382(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 104) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func383(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 50) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func384(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 38) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func385(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 85) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func386(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 18) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func387(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 97) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func388(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func389(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 26) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func390(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 67) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func391(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 103) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func392(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v > 50) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func393(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v <= 22) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func394(uint8_t a1) {
+
   char v = 4 * a1;
   if (v <= 103) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func395(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 38) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func396(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 52) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func397(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 17) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func398(uint8_t a1) {
+
   char v = 4 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func399(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 92) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func400(uint8_t a1, uint8_t a2) {
+
   char v = (a1 & a2);
   if (v <= 55) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func401(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 81) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func402(uint8_t a1) {
+
   char v = 4 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func403(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 94) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func404(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func405(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func406(uint8_t a1, uint8_t a2) {
+
   char v = (a1 ^ a2);
   if (v > 101) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func407(uint8_t a1) {
+
   char v = 4 * a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func408(uint8_t a1, uint8_t a2) {
+
   char v = a1 | a2;
   if (v <= 44) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func409(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 __attribute__((noinline)) int func410(uint8_t a1) {
+
   char v = ~a1;
   if (v > 1) return 0;
   return 1;
+
 }
 
 int api(const uint8_t *data, size_t size) {
+
   if (size != 20) return 0;
 
   if (func1(data[0], data[1]) == 0) return 0;
@@ -2889,24 +3716,36 @@ int api(const uint8_t *data, size_t size) {
   fprintf(stderr, "BINGO\n");
   abort();
   return 1;
+
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+
   if (api(Data, Size)) {
+
     // Should've crashed before getting here.
     return 0;
+
   }
+
   return 0;
+
 }
 
 #ifdef __AFL_COMPILER
-int main() {
+int main(int argc, char **argv) {
+
   unsigned char buf[64];
   ssize_t       len;
+  int           fd = 0;
+  if (argc > 1) fd = open(argv[1], O_RDONLY);
 
   if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
+
 }
+
 #endif
+

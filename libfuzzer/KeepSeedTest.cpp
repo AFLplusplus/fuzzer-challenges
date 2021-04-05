@@ -1,4 +1,7 @@
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
@@ -16,34 +19,53 @@
 static volatile int Sink = 0;
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+
   if (Size > 17) return 0;
 
   if (Size >= 6 && Data[0] == 'S' && Data[1] == 'E' && Data[2] == 'L' &&
       Data[3] == 'E' && Data[4] == 'C' && Data[5] == 'T') {
+
     if (Size >= 7 && Data[6] == ' ') {
+
       if (Size >= 11 && Data[7] == 'F' && Data[8] == 'R' && Data[9] == 'O' &&
           Data[10] == 'M') {
+
         if (Size >= 12 && Data[11] == ' ') {
+
           if (Size >= 17 && Data[12] == 'W' && Data[13] == 'H' &&
               Data[14] == 'E' && Data[15] == 'R' && Data[16] == 'E') {
+
             fprintf(stderr, "BINGO; Found the target, exiting.\n");
             abort();
+
           }
+
         }
+
       }
+
     }
+
   }
+
   return 0;
+
 }
 
 #ifdef __AFL_COMPILER
-int main() {
+int main(int argc, char **argv) {
+
   unsigned char buf[64];
   ssize_t       len;
+  int           fd = 0;
+  if (argc > 1) fd = open(argv[1], O_RDONLY);
 
   if ((len = read(0, buf, sizeof(buf))) <= 0) return -1;
 
   LLVMFuzzerTestOneInput(buf, len);
   return 0;
+
 }
+
 #endif
+
