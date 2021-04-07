@@ -21,6 +21,7 @@ The fuzzers and necessary compilers must be in the path: `afl-clang-fast`, `afl-
   * afl++-qemu
   * honggfuzz
   * libfuzzer
+  * symqemu (via `test-symqemu.sh`)
 
 ## Testcases:
 

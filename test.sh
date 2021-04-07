@@ -31,7 +31,7 @@ test "$FUZZER" = "afl++" && {
   export CXX=afl-clang-fast++
   export AFL_LLVM_CMPLOG=1
   export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
-  export CMPLOG_LVL=3
+  export CMPLOG_LVL=3AT
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
@@ -39,7 +39,7 @@ test "$FUZZER" = "afl++-qemu" && {
   export CC=clang
   export CXX=clang++
   export CFLAGS=-D__AFL_COMPILER=1
-  export CMPLOG_LVL=3
+  export CMPLOG_LVL=3AT
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }

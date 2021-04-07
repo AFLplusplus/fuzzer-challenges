@@ -1,4 +1,4 @@
-TARGETS = test-crc32 test-u8 test-u16 test-u32 test-u64 test-float test-double test-longdouble test-u128 test-extint test-u32-cmp test-memcmp test-strcmp test-transform
+TARGETS = test-crc32 test-u8 test-u16 test-u32 test-u64 test-float test-double test-longdouble test-u128 test-u32-cmp test-memcmp test-strcmp test-transform test-extint
 
 all:
 	@echo Use test.sh to perform the test.
@@ -7,7 +7,7 @@ all:
 compile:	$(TARGETS)
 
 %:	%.c
-	$(CC) $(CFLAGS) -o $@ $@.c -lm
+	-$(CC) $(CFLAGS) -o $@ $@.c -lm
 
 clean:
 	rm -f $(TARGETS) core* *~ *.log HONGGFUZZ.REPORT.TXT SIG* afl++.dic
