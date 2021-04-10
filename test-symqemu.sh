@@ -4,7 +4,7 @@ test -z "$CC" && CC=clang-11
 #
 # Setup for SYMQEMU
 #
-make CC=$CC CFLAGS="-O3 -g -D__AFL_COMPILER=1" compile
+make CC=$CC CFLAGS="-O0 -g -D__AFL_COMPILER=1" compile
 export SYMCC_OUTPUT_DIR=`pwd`/out
 export PATH=$PATH:/symcc/symqemu/x86_64-linux-user:/symcc
 
