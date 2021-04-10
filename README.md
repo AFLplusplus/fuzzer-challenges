@@ -54,10 +54,10 @@ On failure the generated corpus files are displayed (so you can see how many fin
 
 ## Test as of 10th April 2021
 
-All from current repository state (afl++_vX is the -l option value X).
+All from current repository state (afl++ is CMPLOG instrumented and `afl-fuzz -l3AT -Z`).
 Solve time: 120 seconds for afl++/honggfuzz/libfuzzer
-Sym*, Kirenenko and Manticore are not fuzzers but solvers, hence no timing.
-Also SymCC and SymQEMU have the same results so they are combined to save space.
+Sym*, Kirenenko and Manticore are not fuzzers but solvers, hence no time restriction.
+SymCC and SymQEMU have the same results so they are combined to save space.
 
 |testcase|afl++|kirenenko|sym*|manticore|afl++ QEMU|honggfuzz-2.4|libfuzzer-12|
 |:------:|:---:|:-------:|:--:|:-------:|:--------:|:-----------:|:----------:|
