@@ -53,14 +53,14 @@ On success the time to solve is displayed.
 
 On failure the generated corpus files are displayed (so you can see how many finds there were). There is also an output log called `TESTCASE.log`.
 
-## Test as of 10th April 2021
+## Test as of 11th May 2021
 
 All from current repository state (afl++ is CMPLOG instrumented and `afl-fuzz -l3AT -Z`).
 Solve time: 120 seconds for afl++/honggfuzz/libfuzzer
 Sym*, Kirenenko and Manticore are not fuzzers but solvers, hence no time restriction.
 SymCC and SymQEMU have the same results so they are combined to save space.
 
-|testcase|afl++|kirenenko|sym*|manticore|afl++ QEMU|honggfuzz-2.4|libfuzzer-12|
+|testcase|afl++|kirenenko|sym*|manticore|afl++-qemu/afl++-frida|honggfuzz-2.4|libfuzzer-12|
 |:------:|:---:|:-------:|:--:|:-------:|:--------:|:-----------:|:----------:|
 |test-crc32|0m5,596s|OK|OK|OK|0m14,609s|FAIL|0m55,987s|
 |test-double|0m3,374s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
@@ -77,7 +77,7 @@ SymCC and SymQEMU have the same results so they are combined to save space.
 |test-u64|0m0,623s|OK|OK|OK|0m3,844s|0m1,024s|0m10,346s|
 |test-u8|0m1,449s|OK|OK|OK|0m18,186s|0m1,026s|0m4,382s|
 
-afl++_v3 has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-20-aflpp/).
+afl++ has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-20-aflpp/).
 Interpretation: the **slowest** solver is the best in real-world fuzzing.
 
 ## More testcases or fuzzers?
