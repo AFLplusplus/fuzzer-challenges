@@ -19,6 +19,7 @@ The fuzzers and necessary compilers must be in the path: `afl-clang-fast`, `afl-
 `TARGET` can be (currently) one of:
   * afl++
   * afl++-qemu
+  * afl++-frida
   * honggfuzz
   * libfuzzer
   * kirenenko (via `test-kirenenko.sh`, use it's docker container)

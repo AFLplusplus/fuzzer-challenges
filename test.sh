@@ -2,11 +2,11 @@
 ###################
 ### START OF CONFIG
 
-# default fuzzer setup (afl++, afl++-qemu, honggfuzz, libfuzzer)
+# default fuzzer setup (afl++, afl++-qemu, afl++-frida, honggfuzz, libfuzzer)
 FUZZER=afl++
 
 # how many seconds to try each testcase, recommended: 10-30
-RUNTIME=120
+RUNTIME=60
 
 # test a fuzzer in a specific directory? you can put that here
 #FUZZER_DIR=~/AFLplusplus/branches/cmplog_variant
@@ -17,11 +17,11 @@ RUNTIME=120
 # cmdline processing
 test "$1" = "-h" && {
   echo "Syntax: $0 [FUZZER [TESTCASE]]"
-  echo Fuzzers: afl++, afl++-qemu, honggfuzz, libfuzzer
+  echo Fuzzers: afl++, afl++-qemu, afl++-frida, honggfuzz, libfuzzer
   echo Testcase: instead of processing all, process just this one
   exit 0
 }
-test -z "$1" && { echo Warning: no target given - assuming afl++ - available: afl++, afl++-qemu, honggfuzz, libfuzzer; echo; }
+test -z "$1" && { echo Warning: no target given - assuming afl++ - available: afl++, afl++-qemu, afl++-frida, honggfuzz, libfuzzer; echo; }
 test -n "$1" && FUZZER=$1
 DONE=
 
@@ -35,7 +35,7 @@ test "$FUZZER" = "afl++" && {
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
-test "$FUZZER" = "afl++-qemu" && { 
+test "$FUZZER" = "afl++-qemu" -o "$FUZZER" = "afl++-frida" && { 
   export CC=clang
   export CXX=clang++
   export CFLAGS=-D__AFL_COMPILER=1
@@ -56,7 +56,7 @@ test "$FUZZER" = "honggfuzz" && {
   DONE=1
 }
 
-test -z "$DONE" && { echo Error: invalid fuzzer, allowed are only afl++, afl++-qemu, libfuzzer or honggfuzz; exit 1; }
+test -z "$DONE" && { echo Error: invalid fuzzer, allowed are only afl++, afl++-qemu, afl++-frida, libfuzzer or honggfuzz; exit 1; }
 echo Fuzzer: $FUZZER
 echo Maximum runtime: $RUNTIME
 echo
@@ -76,7 +76,7 @@ rm -rf in out-* *.log crash* SIG* HONGGFUZZ.REPORT.TXT
 ulimit -c 0
 mkdir in || exit 1
 echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ > in/in
-test "$FUZZER" = "afl++" -o "$FUZZER" = "afl++-qemu" && {
+test "$FUZZER" = "afl++" -o "$FUZZER" = "afl++-qemu" -o "$FUZZER" = "afl++-frida" && {
   OK=
   afl-fuzz -h 2>&1 | grep -q ' -l ' && OK=1
   test -z "$OK" && echo Warning: afl++ is not cmplog_variant
@@ -125,6 +125,20 @@ for i in *.c*; do
 
       test "$FUZZER" = afl++-qemu && {
         TIME=`{ time afl-fuzz -Q $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c 0 -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
+          echo SUCCESS: $TARGET $TIME
+          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
+          SUCCESS=$((SUCCESS + 1))
+        } || {
+          echo FAIL: $TARGET
+          ls out-$TARGET/default/queue
+          echo 
+          FAIL=$((FAIL + 1))
+        }
+      }
+
+      test "$FUZZER" = afl++-frida && {
+        TIME=`{ time afl-fuzz -O $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c 0 -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
           echo SUCCESS: $TARGET $TIME
           test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
