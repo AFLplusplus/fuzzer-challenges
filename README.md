@@ -26,7 +26,7 @@ The fuzzers and necessary compilers must be in the path: `afl-clang-fast`, `afl-
   * symcc + qemu (via `test-symcc.sh` and `test-symqemu.sh`, use it's docker container)
   * manticore (via `test-manticore.sh`)
 
-Note that manitcore and symqemu success can depend on compile options.
+Note that manticore and symqemu success can depend on compile options.
 
 ## Testcases:
 
