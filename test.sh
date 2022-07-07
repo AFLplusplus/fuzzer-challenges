@@ -17,7 +17,7 @@ RUNTIME=60
 # cmdline processing
 test "$1" = "-h" && {
   echo "Syntax: $0 [FUZZER [TESTCASE]]"
-  echo Fuzzers: afl++, afl++-qemu, afl++-frida, honggfuzz, libfuzzer
+  echo Fuzzers: afl++, afl++-qemu, afl++-frida, honggfuzz, libfuzzer, libafl
   echo Testcase: instead of processing all, process just this one
   exit 0
 }
@@ -35,6 +35,16 @@ test "$FUZZER" = "afl++" && {
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
+test "$FUZZER" = "afl++lto" && { 
+  export CC=afl-clang-lto
+  export CXX=afl-clang-lto++
+  export AFL_LLVM_CMPLOG=1
+  export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
+  export CMPLOG_LVL=3AT
+  export FUZZER_OPTIONS="-Z"
+  export FUZZER=afl++
+  DONE=1
+}
 test "$FUZZER" = "afl++-qemu" -o "$FUZZER" = "afl++-frida" && { 
   export CC=clang
   export CXX=clang++
@@ -50,13 +60,20 @@ test "$FUZZER" = "libfuzzer" && {
   export FUZZER_OPTIONS="-use_value_profile=1 -entropic=1 $FUZZER_OPTIONS"
   DONE=1
 }
+test "$FUZZER" = "libafl" && { 
+  export CC=libafl_cc
+  export CXX=libafl_cxx
+  export CFLAGS="-fsanitize=address --libafl"
+  #export FUZZER_OPTIONS="-use_value_profile=1 -entropic=1 $FUZZER_OPTIONS"
+  DONE=1
+}
 test "$FUZZER" = "honggfuzz" && {
   export CC=hfuzz-clang
   export CXX=hfuzz-clang++
   DONE=1
 }
 
-test -z "$DONE" && { echo Error: invalid fuzzer, allowed are only afl++, afl++-qemu, afl++-frida, libfuzzer or honggfuzz; exit 1; }
+test -z "$DONE" && { echo Error: invalid fuzzer, allowed are only afl++, afl++-qemu, afl++-frida, libfuzzer, libafl or honggfuzz; exit 1; }
 echo Fuzzer: $FUZZER
 echo Maximum runtime: $RUNTIME
 echo
@@ -179,6 +196,22 @@ for i in *.c*; do
         } || {
           echo FAIL: $TARGET
           ls out-$TARGET/
+          echo 
+          FAIL=$((FAIL + 1))
+        }
+      }
+
+      test "$FUZZER" = libafl && {
+        cp -r in out-$TARGET
+        TIME=`{ time timeout -s KILL $RUNTIME ./$TARGET $FUZZER_OPTIONS -i in -o out-$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        ls out-$TARGET/crashes/* >/dev/null 2>&1 && {
+          echo SUCCESS: $TARGET $TIME
+          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
+          rm -f crash*
+          SUCCESS=$((SUCCESS + 1))
+        } || {
+          echo FAIL: $TARGET
+          ls out-$TARGET/queue
           echo 
           FAIL=$((FAIL + 1))
         }
