@@ -16,9 +16,9 @@
                                                                \
   }
 
-typedef _BitInt(24) uint24_t;
-typedef _BitInt(40) uint40_t;
-typedef _BitInt(56) uint56_t;
+typedef _ExtInt(24) uint24_t;
+typedef _ExtInt(40) uint40_t;
+typedef _ExtInt(56) uint56_t;
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 

@@ -54,29 +54,29 @@ On success the time to solve is displayed.
 
 On failure the generated corpus files are displayed (so you can see how many finds there were). There is also an output log called `TESTCASE.log`.
 
-## Test as of 11th May 2021
+## Test as of July 2022
 
 All from current repository state (afl++ is CMPLOG instrumented and `afl-fuzz -l3AT -Z`).
 Solve time: 120 seconds for afl++/honggfuzz/libfuzzer
 Sym*, Kirenenko and Manticore are not fuzzers but solvers, hence no time restriction.
 SymCC and SymQEMU have the same results so they are combined to save space.
 
-|testcase|afl++|libafl|kirenenko|sym*|manticore|afl++-qemu/afl++-frida|honggfuzz-2.4|libfuzzer-12|
+|testcase|afl++|libafl|kirenenko|sym*|manticore|afl++-qemu/afl++-frida|honggfuzz-2.5|libfuzzer-13|
 |:------:|:---:|:----:|:-------:|:--:|:-------:|:--------:|:-----------:|:----------:|
-|test-crc32|0m5,596s|OK|OK|OK|OK|0m14,609s|FAIL|0m55,987s|
-|test-double|0m3,374s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-extint|0m1,663s|OK|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-float|0m1,650s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-longdouble|0m1,241s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-memcmp|0m0,622s|OK|OK|OK|OK|0m6,494s|0m1,023s|0m1,269s|
-|test-strcmp|0m0,623s|OK|FAIL|FAIL|FAIL|0m5,727s|0m1,220s|0m1,469s|
+|test-crc32|0m1,735s|OK|OK|OK|OK|0m14,609s|FAIL|0m14,207s|
+|test-double|0m26,823s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-extint|0m0,429s|OK|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-float|0m4,657s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-longdouble|0m1,031s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-memcmp|0m0,837s|OK|OK|OK|OK|0m6,494s|0m1,005s|0m0,308s|
+|test-strcmp|0m0,835s|OK|FAIL|FAIL|FAIL|0m5,727s|0m1,004s|0m1,040s|
 |test-transform|0m4,334s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-u128|0m0,418s|FAIL|FAIL|OK|FAIL|FAIL|FAIL|FAIL|
-|test-u16|0m1,233s|OK|OK|OK|OK|0m8,132s|0m1,425s|0m12,065s|
-|test-u32|0m1,434s|OK|OK|OK|OK|0m5,185s|0m1,025s|0m6,984s|
-|test-u32-cmp|1m29,184s|OK|OK|OK|OK|1m42,470s|0m1,824s|0m0,759s|
-|test-u64|0m0,623s|OK|OK|OK|OK|0m3,844s|0m1,024s|0m10,346s|
-|test-u8|0m1,449s|OK|OK|OK|OK|0m18,186s|0m1,026s|0m4,382s|
+|test-u128|0m0,682s|FAIL|FAIL|OK|FAIL|FAIL|FAIL|FAIL|
+|test-u16|0m1,252s|OK|OK|OK|OK|0m8,132s|0m1,005s|0m3,741s|
+|test-u32|0m0,844s|OK|OK|OK|OK|0m5,185s|0m1,004s|0m2,887s|
+|test-u32-cmp|0m1,332s|OK|OK|OK|OK|1m42,470s|0m6,404s|0m0,454s|
+|test-u64|0m0,655s|OK|OK|OK|OK|0m3,844s|0m1,005s|0m5,465s|
+|test-u8|0m2,263s|OK|OK|OK|OK|0m18,186s|0m1,004s|0m1,370s|
 
 afl++ has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-20-aflpp/).
 Interpretation: the **slowest** solver is the best in real-world fuzzing.
