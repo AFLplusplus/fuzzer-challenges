@@ -35,6 +35,15 @@ test "$FUZZER" = "afl++" && {
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
+test "$FUZZER" = "afl++gcc" && { 
+  export CC=afl-gcc-fast
+  export CXX=afl-g++-fast++
+  export AFL_LLVM_CMPLOG=1
+  export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
+  export CMPLOG_LVL=3AT
+  export FUZZER_OPTIONS="-Z"
+  DONE=1
+}
 test "$FUZZER" = "afl++lto" && { 
   export CC=afl-clang-lto
   export CXX=afl-clang-lto++
@@ -127,7 +136,9 @@ for i in *.c*; do
 
       test -e ${AFL_TMPDIR}/.cur_input && rm ${AFL_TMPDIR}/.cur_input
       test "$FUZZER" = afl++ && {
-        TIME=`{ time afl-fuzz -x afl++.dic $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        HAVE_DICT=""
+        test -f afl++.dic && HAVE_DICT="-x afl++.dic"
+        TIME=`{ time afl-fuzz $HAVE_DICT $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
           echo SUCCESS: $TARGET $TIME
           test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
