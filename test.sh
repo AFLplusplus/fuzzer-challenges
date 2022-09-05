@@ -92,7 +92,7 @@ echo Preparation:
 export CFLAGS="-O0 -fno-inline -fno-builtin $CFLAGS"
 echo CC=$CC
 echo CFLAGS=$CFLAGS
-env|egrep '^AFL_'
+env|grep -E '^AFL_'
 export CXXFLAGS="$CFLAGS $CXXFLAGS"
 export AFL_QUIET=1
 make clean >/dev/null 2>&1
