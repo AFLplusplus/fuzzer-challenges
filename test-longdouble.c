@@ -1,58 +1,47 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <string.h>
-#include <strings.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <math.h>
 
-#define bail(msg, pos)                                         \
-  while (1) {                                                  \
-                                                               \
-    fprintf(stderr, "%s at %u\n", (char *)msg, (uint32_t)pos); \
-    return 0;                                                  \
-                                                               \
+#define bail(msg)                 \
+  while (1) {                     \
+    fprintf(stderr, "%s\n", msg); \
+    return 0;                     \
   }
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
+  long double lesser, greater;
+  long double *vals = (long double *)buf;
 
-  long double *p80, lesser, greater;
+  if (len < sizeof(long double[4])) bail("too short");
 
-  if (len < 40) bail("too short", 0);
-
-  p80 = (long double *)(buf);
   lesser = 1000000.01;
   greater = 1000010.99;
-  if (*p80 < lesser || *p80 > greater) bail("wrong long double", 0);
-  if (!isnormal(*p80)) bail("not normal", 0);
+  if (vals[0] < lesser || vals[0] > greater) bail("wrong long double (vals[0])");
+  if (!isnormal(vals[0])) bail("not normal (vals[0])");
 
-  p80 = (long double *)(buf + 10);
   lesser = 101.9;
   greater = 109.0;
-  if (*p80 < lesser || *p80 > greater) bail("wrong long double", 10);
-  if (!isnormal(*p80)) bail("not normal", 10);
+  if (vals[1] < lesser || vals[1] > greater) bail("wrong long double (vals[1])");
+  if (!isnormal(vals[1])) bail("not normal (vals[1])");
 
-  p80 = (long double *)(buf + 20);
   lesser = 22222221.9;
   greater = 22222225.1;
-  if (*p80 < lesser || *p80 > greater) bail("wrong long double", 20);
-  if (!isnormal(*p80)) bail("not normal", 20);
+  if (vals[2] < lesser || vals[2] > greater) bail("wrong long double (vals[2])");
+  if (!isnormal(vals[2])) bail("not normal (vals[2])");
 
   // no fuzzer can solve long double arithmetic, so we leave the harder
   // testcases out
 
   // exact
-  p80 = (long double *)(buf + 30);
-  if (*p80 != 3.141592653589793116) bail("wrong long double", 30);
-  if (!isnormal(*p80)) bail("not normal", 30);
+  if (vals[3] != 3.141592653589793116) bail("wrong long double (vals[3])");
+  if (!isnormal(vals[3])) bail("not normal (vals[3])");
 
   abort();
 
   return 0;
-
 }
 
 #ifdef __AFL_COMPILER
