@@ -113,7 +113,7 @@ unsigned char *base64_decode(const unsigned char *data, size_t input_length,
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
-  uint8_t * p8;
+  uint8_t  *p8;
   uint32_t *p32;
   int       i;
   uint8_t   buff[100], tmp[20];
