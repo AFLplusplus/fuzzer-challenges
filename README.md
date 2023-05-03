@@ -1,14 +1,14 @@
 # Fuzzing introspection testcases
 
 Test a fuzzer what fuzzing challenges it can solve.
-The goal is to have testcases that afl++ can all complete - once they are all implemented.
-Currently the different solving mechanisms have to be set as defined in `src/afl-fuzz-redqueen.c`.
-The comparisons to honggfuzz and libfuzzer are biased, as the testcases are how afl-fuzz sees things.
-The `libfuzzer/` directories has libfuzzer's applicable own testcases, of which afl++ is only able to solve 64% (vs 86% honggfuzz and 92% libfuzzer).
+The goal is to have testcases that AFL++ can all complete - once they are all implemented.
+Currently the different solving mechanisms have to be set as defined in `src/AFL-fuzz-redqueen.c`.
+The comparisons to honggfuzz and libfuzzer are biased, as the testcases are how AFL-fuzz sees things.
+The `libfuzzer/` directories has libfuzzer's applicable own testcases, of which AFL++ is only able to solve 64% (vs 86% honggfuzz and 92% libfuzzer).
 
 ## Setup
 
-The fuzzers and necessary compilers must be in the path: `afl-clang-fast`, `afl-fuzz`, `hfuzz-clang`, `honggfuzz`, `clang`.
+The fuzzers and necessary compilers must be in the path: `AFL-clang-fast`, `AFL-fuzz`, `hfuzz-clang`, `honggfuzz`, `clang`.
 
 ## Running
 
@@ -17,15 +17,16 @@ The fuzzers and necessary compilers must be in the path: `afl-clang-fast`, `afl-
 ```
 
 `TARGET` can be (currently) one of:
-  * afl++
-  * afl++-qemu
-  * afl++-frida
-  * libafl (WIP)
+  * AFL++
+  * AFL++-qemu
+  * AFL++-frida
+  * libAFL (WIP)
   * honggfuzz
   * libfuzzer
   * kirenenko (via `test-kirenenko.sh`, use it's docker container)
   * symcc + qemu (via `test-symcc.sh` and `test-symqemu.sh`, use it's docker container)
   * manticore (via `test-manticore.sh`)
+  * tritondse (via `test-tritondse.sh`)
 
 Note that manticore and symqemu success can depend on compile options.
 
@@ -56,29 +57,29 @@ On failure the generated corpus files are displayed (so you can see how many fin
 
 ## Test as of July 2022
 
-All from current repository state (afl++ is CMPLOG instrumented and `afl-fuzz -l3AT -Z`).
-Solve time: 120 seconds for afl++/honggfuzz/libfuzzer
+All from current repository state (AFL++ is CMPLOG instrumented and `AFL-fuzz -l3AT -Z`).
+Solve time: 120 seconds for AFL++/honggfuzz/libfuzzer
 Sym*, Kirenenko and Manticore are not fuzzers but solvers, hence no time restriction.
 SymCC and SymQEMU have the same results so they are combined to save space.
 
-|testcase|afl++|libafl|kirenenko|sym*|manticore|afl++-qemu/afl++-frida|honggfuzz-2.5|libfuzzer-13|
-|:------:|:---:|:----:|:-------:|:--:|:-------:|:--------:|:-----------:|:----------:|
-|test-crc32|0m1,735s|OK|OK|OK|OK|0m14,609s|FAIL|0m14,207s|
-|test-double|0m26,823s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-extint|0m0,429s|OK|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-float|0m4,657s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-longdouble|0m1,031s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-memcmp|0m0,837s|OK|OK|OK|OK|0m6,494s|0m1,005s|0m0,308s|
-|test-strcmp|0m0,835s|OK|FAIL|FAIL|FAIL|0m5,727s|0m1,004s|0m1,040s|
-|test-transform|0m4,334s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-u128|0m0,682s|FAIL|FAIL|OK|FAIL|FAIL|FAIL|FAIL|
-|test-u16|0m1,252s|OK|OK|OK|OK|0m8,132s|0m1,005s|0m3,741s|
-|test-u32|0m0,844s|OK|OK|OK|OK|0m5,185s|0m1,004s|0m2,887s|
-|test-u32-cmp|0m1,332s|OK|OK|OK|OK|1m42,470s|0m6,404s|0m0,454s|
-|test-u64|0m0,655s|OK|OK|OK|OK|0m3,844s|0m1,005s|0m5,465s|
-|test-u8|0m2,263s|OK|OK|OK|OK|0m18,186s|0m1,004s|0m1,370s|
+|testcase|AFL++|libAFL|kirenenko|sym*|manticore|tritondse|AFL++-qemu/AFL++-frida|honggfuzz-2.5|libfuzzer-13|
+|:------:|:---:|:----:|:-------:|:--:|:-------:|:-------:|:--------:|:-----------:|:----------:|
+|test-crc32|0m1,735s|OK|OK|OK|OK|OK|0m14,609s|FAIL|0m14,207s|
+|test-double|0m26,823s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-extint|0m0,429s|OK|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-float|0m4,657s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-longdouble|0m1,031s|FAIL|FAIL|FAIL|FAIL||FAIL|FAIL|FAIL|
+|test-memcmp|0m0,837s|OK|OK|OK|OK|FAIL|0m6,494s|0m1,005s|0m0,308s|
+|test-strcmp|0m0,835s|OK|FAIL|FAIL|FAIL||0m5,727s|0m1,004s|0m1,040s|
+|test-transform|0m4,334s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-u128|0m0,682s|FAIL|FAIL|OK|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-u16|0m1,252s|OK|OK|OK|OK|OK|0m8,132s|0m1,005s|0m3,741s|
+|test-u32|0m0,844s|OK|OK|OK|OK|OK|0m5,185s|0m1,004s|0m2,887s|
+|test-u32-cmp|0m1,332s|OK|OK|OK|OK|OK|1m42,470s|0m6,404s|0m0,454s|
+|test-u64|0m0,655s|OK|OK|OK|OK|OK|0m3,844s|0m1,005s|0m5,465s|
+|test-u8|0m2,263s|OK|OK|OK|OK|OK|0m18,186s|0m1,004s|0m1,370s|
 
-afl++ has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-20-aflpp/).
+AFL++ has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-AFLpp/](https://www.fuzzbench.com/reports/experimental/2021-01-20-aflpp/).
 Interpretation: the **slowest** solver is the best in real-world fuzzing.
 
 ## More testcases or fuzzers?
