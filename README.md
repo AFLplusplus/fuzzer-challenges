@@ -68,9 +68,9 @@ SymCC and SymQEMU have the same results so they are combined to save space.
 |test-double|0m26,823s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
 |test-extint|0m0,429s|OK|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
 |test-float|0m4,657s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-longdouble|0m1,031s|FAIL|FAIL|FAIL|FAIL||FAIL|FAIL|FAIL|
+|test-longdouble|0m1,031s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
 |test-memcmp|0m0,837s|OK|OK|OK|OK|FAIL|0m6,494s|0m1,005s|0m0,308s|
-|test-strcmp|0m0,835s|OK|FAIL|FAIL|FAIL||0m5,727s|0m1,004s|0m1,040s|
+|test-strcmp|0m0,835s|OK|FAIL|FAIL|FAIL|FAIL|0m5,727s|0m1,004s|0m1,040s|
 |test-transform|0m4,334s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
 |test-u128|0m0,682s|FAIL|FAIL|OK|FAIL|FAIL|FAIL|FAIL|FAIL|
 |test-u16|0m1,252s|OK|OK|OK|OK|OK|0m8,132s|0m1,005s|0m3,741s|
