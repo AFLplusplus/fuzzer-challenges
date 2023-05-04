@@ -1,7 +1,6 @@
 import sys
 import logging
 
-from tritondse import CompositeData
 from tritondse import Config
 from tritondse import CoverageStrategy
 from tritondse import ProcessState
@@ -17,23 +16,26 @@ logging.basicConfig(level=logging.INFO)
 
 def pre_exec_hook(se: SymbolicExecutor, state: ProcessState):
     logging.info(f"[PRE-EXEC] Processing seed: {se.seed.hash}, \
-                    ({repr(se.seed.content.files)})")
+                    ({repr(se.seed.content)})")
     with open("out/" + se.seed.hash, 'wb') as file:
-        file.write(se.seed.content.files["stdin"] )
+        file.write(se.seed.content)
 
 
 # Load the program (LIEF-based program loader).
 prog = Program(sys.argv[1])
 
 # Load the configuration.
-config = Config(coverage_strategy=CoverageStrategy.PATH, debug=True,
-                pipe_stdout=True, seed_format=SeedFormat.COMPOSITE)
+config = Config(coverage_strategy=CoverageStrategy.PATH,
+               debug=True,
+               pipe_stdout=True,
+               pipe_stderr=True,
+               seed_format=SeedFormat.RAW)
 
 # Create an instance of the Symbolic Explorator
 dse = SymbolicExplorator(config, prog)
 
 # Create a starting seed, representing argv.
-seed = Seed(CompositeData(files={"stdin": b"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"}))
+seed = Seed(b"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
 # Add seed to the worklist.
 dse.add_input_seed(seed)

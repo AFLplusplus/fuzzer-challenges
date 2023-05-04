@@ -15,7 +15,7 @@ for j in test-crc32 test-transform test-u32 test-u8 test-double test-memcmp test
   rm -rf core out
   mkdir out
   echo Running $j ...
-  python3 tritondsetest.py ./$j > $j.log 2>&1
+  timeout -s KILL 15 python3 tritondsetest.py ./$j > $j.log 2>&1
   cd out
   for i in *; do cat $i | ../$j ; done
   test -e core && echo SUCCESS | tee -a ../$j.log
