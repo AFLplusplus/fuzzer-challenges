@@ -13,7 +13,7 @@ for j in test-crc32 test-longdouble test-transform test-u32 test-u8 test-double 
 {
 
   # Setup individual run
-  echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ > test.txt
+  echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ > test.txt
   PREV=-1
   CUR=0
   rm -f core

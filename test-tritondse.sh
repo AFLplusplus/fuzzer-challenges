@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Setup for Manticore
+# Setup for TritonDSE
 #
 make clean
 make CC=clang CFLAGS="-g -D__AFL_COMPILER=1" compile
@@ -27,4 +27,4 @@ done
 echo
 echo RESULTS
 echo =======
-grep -w SUCCESS test-*.log | sed 's/\.log//'
+grep -wl SUCCESS test-*.log | sed 's/\.log//'

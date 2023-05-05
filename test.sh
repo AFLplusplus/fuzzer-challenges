@@ -15,13 +15,12 @@ RUNTIME=60
 #################
 
 # cmdline processing
-test "$1" = "-h" && {
+test -z "$1" -o "$1" = "-h" && {
   echo "Syntax: $0 [FUZZER [TESTCASE]]"
   echo Fuzzers: afl++, afl++-qemu, afl++-frida, honggfuzz, libfuzzer, libafl
   echo Testcase: instead of processing all, process just this one
   exit 0
 }
-test -z "$1" && { echo Warning: no target given - assuming afl++ - available: afl++, afl++-qemu, afl++-frida, honggfuzz, libfuzzer; echo; }
 test -n "$1" && FUZZER=$1
 DONE=
 
@@ -101,7 +100,7 @@ test -n "$2" && { make "$2" || exit 1; }
 rm -rf in out-* *.log crash* SIG* HONGGFUZZ.REPORT.TXT
 ulimit -c 0
 mkdir in || exit 1
-echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ > in/in
+echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ > in/in
 test "$FUZZER" = "afl++" -o "$FUZZER" = "afl++-qemu" -o "$FUZZER" = "afl++-frida" && {
   OK=
   afl-fuzz -h 2>&1 | grep -q ' -l ' && OK=1

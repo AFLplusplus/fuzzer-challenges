@@ -24,9 +24,10 @@ The fuzzers and necessary compilers must be in the path: `AFL-clang-fast`, `AFL-
   * honggfuzz
   * libfuzzer
   * kirenenko (via `test-kirenenko.sh`, use it's docker container)
-  * symcc + qemu (via `test-symcc.sh` and `test-symqemu.sh`, use it's docker container)
+  * symcc + qemu (via `test-symcc.sh` and `test-symqemu.sh`, use their docker containers)
   * manticore (via `test-manticore.sh`)
   * tritondse (via `test-tritondse.sh`)
+  * fuzzolic (via `test-fuzzolic.sh` + docker.io/ercoppa/fuzzolic-runner-v1:ubuntu2004)
 
 Note that manticore and symqemu success can depend on compile options.
 
@@ -62,24 +63,26 @@ Solve time: 120 seconds for AFL++/honggfuzz/libfuzzer
 Sym*, Kirenenko, TritonDSE and Manticore are not fuzzers but solvers, hence no time restriction.
 SymQEMU currently has zero solves so it has been removed to same space.
 
-|testcase|AFL++|libAFL|kirenenko|symcc|manticore|tritondse|AFL++-qemu/AFL++-frida|honggfuzz-2.5|libfuzzer-13|
-|:------:|:---:|:----:|:-------:|:--:|:-------:|:-------:|:--------:|:-----------:|:----------:|
-|test-crc32|0m1,735s|OK|OK|OK|OK|OK|0m14,609s|FAIL|0m14,207s|
-|test-double|0m26,823s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-extint|0m0,429s|OK|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-float|0m4,657s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-longdouble|0m1,031s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-memcmp|0m0,837s|OK|OK|OK|OK|OK|0m6,494s|0m1,005s|0m0,308s|
-|test-strcmp|0m0,835s|OK|FAIL|FAIL|FAIL|OK|0m5,727s|0m1,004s|0m1,040s|
-|test-transform|0m4,334s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
-|test-u128|0m0,682s|FAIL|FAIL|OK|FAIL|OK|FAIL|FAIL|FAIL|
-|test-u16|0m1,252s|OK|OK|OK|OK|OK|0m8,132s|0m1,005s|0m3,741s|
-|test-u32|0m0,844s|OK|OK|OK|OK|OK|0m5,185s|0m1,004s|0m2,887s|
-|test-u32-cmp|0m1,332s|OK|OK|OK|OK|OK|1m42,470s|0m6,404s|0m0,454s|
-|test-u64|0m0,655s|OK|OK|OK|OK|OK|0m3,844s|0m1,005s|0m5,465s|
-|test-u8|0m2,263s|OK|OK|OK|OK|OK|0m18,186s|0m1,004s|0m1,370s|
+|testcase|AFL++|libAFL|kirenenko|symcc|manticore|tritondse|fuzzolic|AFL++-qemu/frida|honggfuzz-2.5|libfuzzer-13|
+|:------:|:---:|:----:|:-------:|:---:|:-------:|:-------:|:------:|:--------------:|:-----------:|:----------:|
+|test-crc32|0m1,735s|OK|OK|OK|OK|OK|OK|0m14,609s|FAIL|0m14,207s|
+|test-double|0m26,823s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-extint|0m0,429s|OK|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-float|0m4,657s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-longdouble|0m1,031s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-memcmp|0m0,837s|OK|OK|OK|OK|OK|OK|0m6,494s|0m1,005s|0m0,308s|
+|test-strcmp|0m0,835s|OK|FAIL|FAIL|FAIL|OK|FAIL|0m5,727s|0m1,004s|0m1,040s|
+|test-transform|0m4,334s(*)|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-u128|0m0,682s|FAIL|FAIL|OK|FAIL|OK|OK|FAIL|FAIL|FAIL|
+|test-u16|0m1,252s|OK|OK|OK|OK|OK|OK|0m8,132s|0m1,005s|0m3,741s|
+|test-u32|0m0,844s|OK|OK|OK|OK|OK|OK|0m5,185s|0m1,004s|0m2,887s|
+|test-u32-cmp|0m1,332s|OK|OK|OK|OK|OK|OK|1m42,470s|0m6,404s|0m0,454s|
+|test-u64|0m0,655s|OK|OK|OK|OK|OK|OK|0m3,844s|0m1,005s|0m5,465s|
+|test-u8|0m2,263s|OK|OK|OK|OK|OK|OK|0m18,186s|0m1,004s|0m1,370s|
 
-AFL++ has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-AFLpp/](https://www.fuzzbench.com/reports/experimental/2021-01-20-aflpp/).
+(*) some of these transform solvings are very expensive and hence disabled, but can be enabled at compile time in AFL++
+
+AFL++ has the most solves, but due to the many solve attempts overall fuzzing performance is decreased, as can be seen at [https://www.fuzzbench.com/reports/experimental/2021-01-12-aflpp/](https://www.fuzzbench.com/reports/experimental/2021-01-20-aflpp/).
 Interpretation: the **slowest** solver is the best in real-world fuzzing.
 
 ## More testcases or fuzzers?

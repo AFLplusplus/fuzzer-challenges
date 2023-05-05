@@ -22,11 +22,11 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
   if (len < 28) bail("too short", 0);
   if (strncasecmp((char *)buf, "0123", 4)) bail("wrong string", 0);
-  if (strncasecmp((char *)buf + 4, "87654321", 8)) bail("wrong string", 4);
+  if (strncmp((char *)buf + 4, "87654321", 8)) bail("wrong string", 4);
   if (strncasecmp((char *)buf + 12, "ABCDEFHIKLMNOPQR", 16))
     bail("wrong string", 12);
   if (len < 54) bail("too short", 0);
-  if (strncasecmp((char *)buf + 28, "ZYXWVUTSRQPONMLKJIHGFEDCBA", 26))
+  if (strncmp((char *)buf + 28, "ZYXWVUTSRQPONMLKJIHGFEDCBA", 26))
     bail("wrong string", 28);
 
   abort();
