@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 import logging
 
@@ -34,8 +35,9 @@ config = Config(coverage_strategy=CoverageStrategy.PATH,
 # Create an instance of the Symbolic Explorator
 dse = SymbolicExplorator(config, prog)
 
-# Create a starting seed, representing argv.
-seed = Seed(b"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+# Create a starting seed
+input = b"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+seed = Seed(input)
 
 # Add seed to the worklist.
 dse.add_input_seed(seed)

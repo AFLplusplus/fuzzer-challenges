@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Setup for Kirenenko
+# Setup for symsan
 #
 
 FILES=`ls test-*.c|sed 's/\.c//'`
@@ -11,7 +11,7 @@ make CC=cc CFLAGS="-g -D__AFL_COMPILER=1" compile
 for i in $FILES; do
   test -x $i && mv $i $i.plain
 done
-make CC=/kirenenko/bin/ko-clang CFLAGS="-g -D__AFL_COMPILER=1" compile
+make KO_USE_Z3=1 KO_CC=clang-12 CC=/workdir/symsan/build/bin/ko-clang CFLAGS="-g -D__AFL_COMPILER=1" compile
 export TAINT_OPTIONS="taint_file=test.txt:output_dir=out"
 
 for j in $FILES; do
