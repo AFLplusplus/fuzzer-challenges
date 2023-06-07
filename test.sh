@@ -2,10 +2,10 @@
 ###################
 ### START OF CONFIG
 
-# default fuzzer setup (afl++, afl++-qemu, afl++-frida, honggfuzz, libfuzzer)
+# default fuzzer setup (e.g. afl++, libfuzzer, honggfuzz, ...)
 FUZZER=afl++
 
-# how many seconds to try each testcase, recommended: 10-30
+# how many seconds to try each testcase, recommended: 10-120
 RUNTIME=60
 
 # test a fuzzer in a specific directory? you can put that here
@@ -17,7 +17,7 @@ RUNTIME=60
 # cmdline processing
 test -z "$1" -o "$1" = "-h" && {
   echo "Syntax: $0 [FUZZER [TESTCASE]]"
-  echo Fuzzers: afl++, afl++-qemu, afl++-frida, honggfuzz, libfuzzer, libafl
+  echo Fuzzers: afl++, afl++-gcc, afl++-qemu, afl++-frida, honggfuzz, libfuzzer, libafl
   echo Testcase: instead of processing all, process just this one
   exit 0
 }
@@ -34,7 +34,7 @@ test "$FUZZER" = "afl++" && {
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
-test "$FUZZER" = "afl++gcc" && { 
+test "$FUZZER" = "afl++-gcc" && {
   export CC=afl-gcc-fast
   export CXX=afl-g++-fast++
   export AFL_LLVM_CMPLOG=1
@@ -73,6 +73,7 @@ test "$FUZZER" = "libafl" && {
   export CXX=libafl_cxx
   export CFLAGS="-fsanitize=address --libafl"
   #export FUZZER_OPTIONS="-use_value_profile=1 -entropic=1 $FUZZER_OPTIONS"
+  echo PATH=$PATH
   DONE=1
 }
 test "$FUZZER" = "honggfuzz" && {
@@ -84,6 +85,9 @@ test "$FUZZER" = "honggfuzz" && {
 test -z "$DONE" && { echo Error: invalid fuzzer, allowed are only afl++, afl++-qemu, afl++-frida, libfuzzer, libafl or honggfuzz; exit 1; }
 echo Fuzzer: $FUZZER
 echo Maximum runtime: $RUNTIME
+test -n "$FUZZER_DIR" && echo Detected FUZZER_DIR=$FUZZER_DIR, expanding PATH and AFL_PATH
+test -n "$FUZZER_DIR" && export PATH=$FUZZER_DIR:$PATH
+test -n "$FUZZER_DIR" && export AFL_PATH=$FUZZER_DIR
 echo
 
 # prepare environment
@@ -116,8 +120,6 @@ export AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
 export RUNTIME
 unset ASAN_FUZZER_OPTIONS
 export ASAN_OPTIONS="disable_coredump=0:unmap_shadow_on_exit=1:abort_on_error=1:detect_leaks=0:symbolize=0"
-test -n "$FUZZER_DIR" && export PATH=$FUZZER_DIR:$PATH
-test -n "$FUZZER_DIR" && export AFL_PATH=$FUZZER_DIR
 SUCCESS=0
 FAIL=0
 echo
@@ -134,7 +136,7 @@ for i in *.c*; do
       echo Running $TARGET ...
 
       test -e ${AFL_TMPDIR}/.cur_input && rm ${AFL_TMPDIR}/.cur_input
-      test "$FUZZER" = afl++ && {
+      test "$FUZZER" = afl++ -o "$FUZZER" = afl++-gcc && {
         HAVE_DICT=""
         test -f afl++.dic && HAVE_DICT="-x afl++.dic"
         TIME=`{ time afl-fuzz $HAVE_DICT $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
@@ -184,7 +186,7 @@ for i in *.c*; do
         ls SIG* >/dev/null 2>&1 && {
           echo SUCCESS: $TARGET $TIME
           test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
-          rm -f SIG* HONGGFUZZ.REPORT.TXT 
+          rm -f SIG* HONGGFUZZ.REPORT.TXT
           SUCCESS=$((SUCCESS + 1))
         } || {
           echo FAIL: $TARGET

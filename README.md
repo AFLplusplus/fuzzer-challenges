@@ -17,10 +17,11 @@ The fuzzers and necessary compilers must be in the path: `AFL-clang-fast`, `AFL-
 ```
 
 `TARGET` can be (currently) one of:
-  * AFL++
+  * AFL++ (llvm_mode with CMPLOG)
+  * AFL++-gcc (gcc_plugin with CMPLOG)
   * AFL++-qemu
   * AFL++-frida
-  * libAFL (WIP)
+  * libAFL
   * honggfuzz
   * libfuzzer
   * symsan (via `test-symsan.sh`, use it's docker container)
@@ -29,7 +30,7 @@ The fuzzers and necessary compilers must be in the path: `AFL-clang-fast`, `AFL-
   * tritondse (via `test-tritondse.sh`)
   * fuzzolic (via `test-fuzzolic.sh` + docker.io/ercoppa/fuzzolic-runner-v1:ubuntu2004)
 
-Note that manticore and symqemu success can depend on compile options.
+Note that manticore, tritondse, fuzzolic and symqemu success can depend on compile options.
 
 ## Testcases:
 
@@ -39,7 +40,7 @@ Note that manticore and symqemu success can depend on compile options.
   * `test-u64` - several chained 64 bits checks
   * `test-u128` - several chained 128 bits checks
   * `test-u32-cmp` - several chained 32 bit lesser/greater checks
-  * `text-extint` - llvm _ExtInt() tests
+  * `text-extint` - llvm _ExtInt() tests (does not work with afl++-gcc)
   * `test-float` - several chained float checks
   * `test-double` - several chained double checks
   * `test-longdouble` - several chained long double checks
@@ -58,10 +59,11 @@ On failure the generated corpus files are displayed (so you can see how many fin
 
 ## Test as of May 2023
 
-All from current repository state (AFL++ is CMPLOG instrumented and `AFL-fuzz -l3AT -Z`).
-Solve time: 120 seconds for AFL++/honggfuzz/libfuzzer
-Symcc/SymQEMU, symsan, TritonDSE and Manticore are not fuzzers but solvers, hence no time restriction.
-SymQEMU currently has zero solves so it has been removed to same space.
+All from current repository state (AFL++ is CMPLOG instrumented and `afl-fuzz -l3AT -Z`).
+Solve time: 120 seconds for AFL++*/libafl/honggfuzz/libfuzzer
+The current default libafl fuzzer (fuzzbench variant) does not have a feature to stop when a crash is found, hence only OK or FAIL as results.
+Symcc/SymQEMU, symsan, fuzzolic, TritonDSE and Manticore are not fuzzers but solvers, hence no time restriction.
+SymQEMU currently has zero solves so it has been removed.
 
 |testcase|AFL++|libAFL|symsan|symcc|manticore|tritondse|fuzzolic|AFL++-qemu/frida|honggfuzz-2.5|libfuzzer-13|
 |:------:|:---:|:----:|:----:|:---:|:-------:|:-------:|:------:|:--------------:|:-----------:|:----------:|
