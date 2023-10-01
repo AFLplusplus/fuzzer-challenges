@@ -74,7 +74,7 @@ SymQEMU currently has zero solves so it has been removed.
 |test-longdouble|0m1,031s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
 |test-memcmp|0m0,837s|OK|OK|OK|OK|OK|OK|0m6,494s|0m1,005s|0m0,308s|
 |test-strcmp|0m0,835s|OK|OK|FAIL|FAIL|OK|FAIL|0m5,727s|0m1,004s|0m1,040s|
-|test-transform|0m4,334s(*)|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|
+|test-transform|0m28,351s|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|FAIL|0m58,311s|
 |test-u128|0m0,682s|FAIL|FAIL|OK|FAIL|OK|OK|FAIL|FAIL|FAIL|
 |test-u16|0m1,252s|OK|OK|OK|OK|OK|OK|0m8,132s|0m1,005s|0m3,741s|
 |test-u32|0m0,844s|OK|OK|OK|OK|OK|OK|0m5,185s|0m1,004s|0m2,887s|

@@ -6,7 +6,7 @@
 FUZZER=afl++
 
 # how many seconds to try each testcase, recommended: 10-120
-RUNTIME=60
+RUNTIME=120
 
 # test a fuzzer in a specific directory? you can put that here
 #FUZZER_DIR=~/AFLplusplus/branches/cmplog_variant
@@ -30,7 +30,7 @@ test "$FUZZER" = "afl++" && {
   export CXX=afl-clang-fast++
   export AFL_LLVM_CMPLOG=1
   export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
-  export CMPLOG_LVL=3AT
+  export CMPLOG_LVL=3ATX
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
@@ -39,7 +39,7 @@ test "$FUZZER" = "afl++-gcc" && {
   export CXX=afl-g++-fast++
   export AFL_LLVM_CMPLOG=1
   export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
-  export CMPLOG_LVL=3AT
+  export CMPLOG_LVL=3ATX
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
@@ -48,7 +48,7 @@ test "$FUZZER" = "afl++lto" && {
   export CXX=afl-clang-lto++
   export AFL_LLVM_CMPLOG=1
   export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
-  export CMPLOG_LVL=3AT
+  export CMPLOG_LVL=3ATX
   export FUZZER_OPTIONS="-Z"
   export FUZZER=afl++
   DONE=1
@@ -57,7 +57,7 @@ test "$FUZZER" = "afl++-qemu" -o "$FUZZER" = "afl++-frida" && {
   export CC=clang
   export CXX=clang++
   export CFLAGS=-D__AFL_COMPILER=1
-  export CMPLOG_LVL=3AT
+  export CMPLOG_LVL=3ATX
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
@@ -65,7 +65,7 @@ test "$FUZZER" = "libfuzzer" && {
   export CC=clang
   export CXX=clang++
   export CFLAGS="-fsanitize=fuzzer -fsanitize=address"
-  export FUZZER_OPTIONS="-use_value_profile=1 -entropic=1 $FUZZER_OPTIONS"
+  export FUZZER_OPTIONS="-use_value_profile=1 -entropic=1 -close_fd_mask=3 $FUZZER_OPTIONS"
   DONE=1
 }
 test "$FUZZER" = "libafl" && { 
@@ -104,7 +104,7 @@ test -n "$2" && { make "$2" || exit 1; }
 rm -rf in out-* *.log crash* SIG* HONGGFUZZ.REPORT.TXT
 ulimit -c 0
 mkdir in || exit 1
-echo ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ > in/in
+echo AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA > in/in
 test "$FUZZER" = "afl++" -o "$FUZZER" = "afl++-qemu" -o "$FUZZER" = "afl++-frida" && {
   OK=
   afl-fuzz -h 2>&1 | grep -q ' -l ' && OK=1
@@ -127,7 +127,7 @@ echo Starting tests
 echo Fuzzer special options: $FUZZER_OPTIONS
 
 # run test cases
-for i in *.c*; do
+for i in *.c; do
 
   TARGET=${i%%.c*}
   test -z "$2" -o "$2" = "$TARGET" && {
@@ -146,38 +146,45 @@ for i in *.c*; do
           SUCCESS=$((SUCCESS + 1))
         } || {
           echo FAIL: $TARGET
-          ls out-$TARGET/default/queue
+          for xx in out-$TARGET/default/queue/id*; do
+            echo -n $xx= ; ./$TARGET $xx
+          done 2>&1 | sort -n -k +4
           echo 
           FAIL=$((FAIL + 1))
         }
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
       }
 
       test "$FUZZER" = afl++-qemu && {
         TIME=`{ time afl-fuzz -Q $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c 0 -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
           echo SUCCESS: $TARGET $TIME
-          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
           SUCCESS=$((SUCCESS + 1))
         } || {
           echo FAIL: $TARGET
-          ls out-$TARGET/default/queue
+          for xx in out-$TARGET/default/queue/id*; do
+            echo -n $xx= ; ./$TARGET $xx
+          done 2>&1 | sort -n -k +4
           echo 
           FAIL=$((FAIL + 1))
         }
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
       }
 
       test "$FUZZER" = afl++-frida && {
         TIME=`{ time afl-fuzz -O $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c 0 -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
           echo SUCCESS: $TARGET $TIME
-          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
           SUCCESS=$((SUCCESS + 1))
         } || {
           echo FAIL: $TARGET
-          ls out-$TARGET/default/queue
+          for xx in out-$TARGET/default/queue/id*; do
+            echo -n $xx= ; ./$TARGET $xx
+          done 2>&1 | sort -n -k +4
           echo 
           FAIL=$((FAIL + 1))
         }
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
       }
 
       test "$FUZZER" = honggfuzz && {
@@ -185,32 +192,36 @@ for i in *.c*; do
         TIME=`{ time honggfuzz $FUZZER_OPTIONS --run_time $RUNTIME -q --exit_upon_crash -i out-$TARGET -s -v -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls SIG* >/dev/null 2>&1 && {
           echo SUCCESS: $TARGET $TIME
-          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
-          rm -f SIG* HONGGFUZZ.REPORT.TXT
           SUCCESS=$((SUCCESS + 1))
         } || {
           echo FAIL: $TARGET
-          ls out-$TARGET/
+          for xx in out-$TARGET/*; do
+            echo -n $xx= ; ./$TARGET $xx
+          done 2>&1 | sort -n -k +4
           echo 
           FAIL=$((FAIL + 1))
         }
+        rm -f SIG* HONGGFUZZ.REPORT.TXT
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
       }
 
       test "$FUZZER" = libfuzzer && {
         cp -r in out-$TARGET
         # -use_value_profile=1 decreases the performance
-        TIME=`{ time ./$TARGET $FUZZER_OPTIONS -timeout=1 -detect_leaks=0 -max_total_time=$RUNTIME -workers=0 >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        TIME=`{ time ./$TARGET $FUZZER_OPTIONS -timeout=1 -detect_leaks=0 -max_total_time=$RUNTIME -workers=0 out-$TARGET in >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls crash* >/dev/null 2>&1 && {
           echo SUCCESS: $TARGET $TIME
-          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
           rm -f crash*
           SUCCESS=$((SUCCESS + 1))
         } || {
           echo FAIL: $TARGET
-          ls out-$TARGET/
+          for xx in out-$TARGET/*; do
+            echo -n $xx= ; ./$TARGET $xx 2>&1|grep wrong|head -n 1
+          done | sort -n -k +4
           echo 
           FAIL=$((FAIL + 1))
         }
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
       }
 
       test "$FUZZER" = libafl && {
@@ -218,15 +229,17 @@ for i in *.c*; do
         TIME=`{ time timeout -s KILL $RUNTIME ./$TARGET $FUZZER_OPTIONS -i in -o out-$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls out-$TARGET/crashes/* >/dev/null 2>&1 && {
           echo SUCCESS: $TARGET $TIME
-          test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
           rm -f crash*
           SUCCESS=$((SUCCESS + 1))
         } || {
           echo FAIL: $TARGET
-          ls out-$TARGET/queue
+          for xx in out-$TARGET/*; do
+            echo -n $xx= ; ./$TARGET $xx
+          done 2>&1 | sort -n -k +4
           echo 
           FAIL=$((FAIL + 1))
         }
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
       }
 
     }
