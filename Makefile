@@ -1,4 +1,4 @@
-TARGETS = test-crc32 test-u8 test-u16 test-u32 test-u64 test-float test-double test-longdouble test-u128 test-u32-cmp test-memcmp test-strcmp test-transform test-extint
+TARGETS = test-crc32 test-u8 test-u16 test-u32 test-u64 test-float test-double test-longdouble test-u128 test-u32-cmp test-memcmp test-strcmp test-transform test-extint test-sorted test-input-len
 
 all:
 	@echo Use test.sh to perform the test.
