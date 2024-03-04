@@ -61,6 +61,25 @@ test "$FUZZER" = "afl++-qemu" -o "$FUZZER" = "afl++-frida" && {
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
+test "$FUZZER" = "afl++-symsan" && {
+  if [ -z "$SYMSAN_PATH" ]; then
+    echo "\$SYMSAN_PATH not set"
+    exit 1
+  fi
+  export CC=afl-clang-fast
+  export CXX=afl-clang-fast++
+  export CFLAGS=-D__AFL_COMPILER=1
+  export AFL_LLVM_CMPLOG=0
+  export AFL_DISABLE_TRIM=1
+  export AFL_CUSTOM_MUTATOR_LIBRARY="$SYMSAN_PATH/bin/libSymSanMutator.so"
+  export AFL_CUSTOM_MUTATOR_ONLY=1
+  export FUZZER_OPTIONS="-Z"
+  export KO_CC=clang-12
+  export KO_CXX=clang++-12
+  export KO_USE_FASTGEN=1
+  export KO_DONT_OPTIMIZE=1
+  DONE=1
+}
 test "$FUZZER" = "libfuzzer" && { 
   export CC=clang
   export CXX=clang++
@@ -99,6 +118,15 @@ env|grep -E '^AFL_'
 export CXXFLAGS="$CFLAGS $CXXFLAGS"
 export AFL_QUIET=1
 make clean >/dev/null 2>&1
+test "$FUZZER" = "afl++-symsan" && {
+  FILES="$2"
+  test -z "$FILES" && FILES=`ls test-*.c|sed 's/\.c//'`
+  test -z "$2" && { make CC="$SYMSAN_PATH/bin/ko-clang" CFLAGS="-g -D__AFL_COMPILER=1" compile || exit 1; }
+  test -n "$2" && { make CC="$SYMSAN_PATH/bin/ko-clang" CFLAGS="-g -D__AFL_COMPILER=1" "$2" || exit 1; }
+  for i in $FILES; do
+    test -x $i && mv $i $i.fg
+  done
+}
 test -z "$2" && { make compile || exit 1; }
 test -n "$2" && { make "$2" || exit 1; }
 rm -rf in out-* *.log crash* SIG* HONGGFUZZ.REPORT.TXT
@@ -185,6 +213,21 @@ for i in *.c; do
           FAIL=$((FAIL + 1))
         }
         test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
+      }
+
+      test "$FUZZER" = afl++-symsan && {
+        export SYMSAN_TARGET="./${TARGET}.fg"
+        TIME=`{ time afl-fuzz $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -- ./$TARGET @@ >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
+          echo SUCCESS: $TARGET $TIME
+          SUCCESS=$((SUCCESS + 1))
+        } || {
+          echo FAIL: $TARGET
+          ls out-$TARGET/default/queue
+          echo
+          FAIL=$((FAIL + 1))
+        }
+        test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log $TARGET.fg
       }
 
       test "$FUZZER" = honggfuzz && {
