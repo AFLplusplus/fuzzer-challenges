@@ -20,8 +20,8 @@ typedef unsigned __int128 uint128_t;
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
-  uint128_t *p128, v128, i;
-  uint8_t   *p = (uint8_t *)&v128;
+  uint128_t *p128, v128;
+  uint8_t   *p = (uint8_t *)&v128, i;
 
   if (len < 48) bail("too short", 48);
 

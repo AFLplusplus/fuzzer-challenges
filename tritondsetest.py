@@ -27,10 +27,10 @@ prog = Program(sys.argv[1])
 
 # Load the configuration.
 config = Config(coverage_strategy=CoverageStrategy.PATH,
-               debug=True,
                pipe_stdout=True,
                pipe_stderr=True,
                seed_format=SeedFormat.RAW)
+#               debug=True,
 
 # Create an instance of the Symbolic Explorator
 dse = SymbolicExplorator(config, prog)

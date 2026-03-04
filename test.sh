@@ -6,7 +6,7 @@
 FUZZER=afl++
 
 # how many seconds to try each testcase, recommended: 10-120
-RUNTIME=120
+RUNTIME=60
 
 # test a fuzzer in a specific directory? you can put that here
 #FUZZER_DIR=~/AFLplusplus/branches/cmplog_variant
@@ -17,7 +17,7 @@ RUNTIME=120
 # cmdline processing
 test -z "$1" -o "$1" = "-h" && {
   echo "Syntax: $0 [FUZZER [TESTCASE]]"
-  echo Fuzzers: afl++, afl++-gcc, afl++-qemu, afl++-frida, honggfuzz, libfuzzer, libafl
+  echo Fuzzers: afl++, afl++-vp, afl++-gcc, afl++-qemu, afl++-frida, honggfuzz, libfuzzer, libafl
   echo Testcase: instead of processing all, process just this one
   exit 0
 }
@@ -29,8 +29,17 @@ test "$FUZZER" = "afl++" && {
   export CC=afl-clang-fast
   export CXX=afl-clang-fast++
   export AFL_LLVM_CMPLOG=1
-  export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
+  #export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
   export CMPLOG_LVL=3ATX
+  export FUZZER_OPTIONS="-Z"
+  DONE=1
+}
+test "$FUZZER" = "afl++-vp" && { 
+  export CC=afl-clang-fast
+  export CXX=afl-clang-fast++
+  export AFL_LLVM_VALUEPROFILE=1
+  export AFL_LLVM_VALUE_PROFILE=1
+  #export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
   export FUZZER_OPTIONS="-Z"
   DONE=1
 }
@@ -38,7 +47,7 @@ test "$FUZZER" = "afl++-gcc" && {
   export CC=afl-gcc-fast
   export CXX=afl-g++-fast++
   export AFL_LLVM_CMPLOG=1
-  export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
+  #export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
   export CMPLOG_LVL=3ATX
   export FUZZER_OPTIONS="-Z"
   DONE=1
@@ -116,7 +125,7 @@ echo CC=$CC
 echo CFLAGS=$CFLAGS
 env|grep -E '^AFL_'
 export CXXFLAGS="$CFLAGS $CXXFLAGS"
-export AFL_QUIET=1
+#export AFL_QUIET=1
 make clean >/dev/null 2>&1
 test "$FUZZER" = "afl++-symsan" && {
   FILES="$2"
@@ -132,7 +141,7 @@ test -n "$2" && { make "$2" || exit 1; }
 rm -rf in out-* *.log crash* SIG* HONGGFUZZ.REPORT.TXT
 ulimit -c 0
 mkdir in || exit 1
-echo AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA > in/in
+echo xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx > in/in
 test "$FUZZER" = "afl++" -o "$FUZZER" = "afl++-qemu" -o "$FUZZER" = "afl++-frida" && {
   OK=
   afl-fuzz -h 2>&1 | grep -q ' -l ' && OK=1
@@ -164,10 +173,13 @@ for i in *.c; do
       echo Running $TARGET ...
 
       test -e ${AFL_TMPDIR}/.cur_input && rm ${AFL_TMPDIR}/.cur_input
-      test "$FUZZER" = afl++ -o "$FUZZER" = afl++-gcc && {
+      test "$FUZZER" = afl++ -o "$FUZZER" = afl++-gcc -o "$FUZZER" = afl++-vp && {
         HAVE_DICT=""
         test -f afl++.dic && HAVE_DICT="-x afl++.dic"
-        TIME=`{ time afl-fuzz $HAVE_DICT $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET -c ./$TARGET -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
+        test "$FUZZER" = afl++-vp || OPT="-c ./$TARGET"
+        test "$FUZZER" = afl++-vp && OPT="-j 1"
+        #echo afl-fuzz $HAVE_DICT $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET $OPT -- ./$TARGET
+        TIME=`{ time afl-fuzz $HAVE_DICT $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET $OPT -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
           echo SUCCESS: $TARGET $TIME
           test -z "$NO_DELETE" && rm -rf out-$TARGET $TARGET.log
