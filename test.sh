@@ -113,9 +113,13 @@ test "$FUZZER" = "honggfuzz" && {
 test -z "$DONE" && { echo Error: invalid fuzzer, allowed are only afl++, afl++-qemu, afl++-frida, libfuzzer, libafl or honggfuzz; exit 1; }
 echo Fuzzer: $FUZZER
 echo Maximum runtime: $RUNTIME
+test -z "$FUZZER_DIR" -a -n "$AFL_PATH" && export PATH=$AFL_PATH:$PATH
 test -n "$FUZZER_DIR" && echo Detected FUZZER_DIR=$FUZZER_DIR, expanding PATH and AFL_PATH
 test -n "$FUZZER_DIR" && export PATH=$FUZZER_DIR:$PATH
 test -n "$FUZZER_DIR" && export AFL_PATH=$FUZZER_DIR
+unset AFL_CMPLOG_ONLY_NEW
+export AFL_FAST_CAL=1
+export AFL_DISABLE_TRIM=1
 echo
 
 # prepare environment
