@@ -37,10 +37,9 @@ test "$FUZZER" = "afl++" && {
 test "$FUZZER" = "afl++-vp" && { 
   export CC=afl-clang-fast
   export CXX=afl-clang-fast++
-  export AFL_LLVM_VALUEPROFILE=1
   export AFL_LLVM_VALUE_PROFILE=1
   #export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
-  export FUZZER_OPTIONS="-Z"
+  export FUZZER_OPTIONS="-Z -r0"
   DONE=1
 }
 test "$FUZZER" = "afl++-gcc" && {
@@ -78,7 +77,7 @@ test "$FUZZER" = "afl++-symsan" && {
   export CC=afl-clang-fast
   export CXX=afl-clang-fast++
   export CFLAGS=-D__AFL_COMPILER=1
-  export AFL_LLVM_CMPLOG=0
+  export AFL_LLVM_CMPLOG=
   export AFL_DISABLE_TRIM=1
   export AFL_CUSTOM_MUTATOR_LIBRARY="$SYMSAN_PATH/bin/libSymSanMutator.so"
   export AFL_CUSTOM_MUTATOR_ONLY=1
@@ -180,8 +179,8 @@ for i in *.c; do
       test "$FUZZER" = afl++ -o "$FUZZER" = afl++-gcc -o "$FUZZER" = afl++-vp && {
         HAVE_DICT=""
         test -f afl++.dic && HAVE_DICT="-x afl++.dic"
-        test "$FUZZER" = afl++-vp || OPT="-c ./$TARGET"
-        test "$FUZZER" = afl++-vp && OPT="-j 1"
+        #test "$FUZZER" = afl++-vp || OPT="-c ./$TARGET"
+        #test "$FUZZER" = afl++-vp && OPT="-j 1"
         #echo afl-fuzz $HAVE_DICT $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET $OPT -- ./$TARGET
         TIME=`{ time afl-fuzz $HAVE_DICT $FUZZER_OPTIONS -V$RUNTIME -i in -o out-$TARGET $OPT -- ./$TARGET >/dev/null 2>$TARGET.log ; } 2>&1 |grep -w real|awk '{print$2}'`
         ls out-$TARGET/default/crashes/id* >/dev/null 2>&1 && {
