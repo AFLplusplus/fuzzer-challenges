@@ -4,3 +4,4 @@ test-*
 afl++.dic
 in
 out-*/
+out

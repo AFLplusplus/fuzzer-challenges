@@ -23,6 +23,7 @@ test -z "$1" -o "$1" = "-h" && {
 }
 test -n "$1" && FUZZER=$1
 DONE=
+export CFLAGS=-fsanitize=fuzzer
 
 # fuzzer options
 test "$FUZZER" = "afl++" && { 
@@ -31,7 +32,7 @@ test "$FUZZER" = "afl++" && {
   export AFL_LLVM_CMPLOG=1
   #export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
   export CMPLOG_LVL=3ATX
-  export FUZZER_OPTIONS="-Z"
+  export FUZZER_OPTIONS="-Z -c0"
   DONE=1
 }
 test "$FUZZER" = "afl++-vp" && { 
@@ -48,7 +49,7 @@ test "$FUZZER" = "afl++-gcc" && {
   export AFL_LLVM_CMPLOG=1
   #export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
   export CMPLOG_LVL=3ATX
-  export FUZZER_OPTIONS="-Z"
+  export FUZZER_OPTIONS="-Z -c0"
   DONE=1
 }
 test "$FUZZER" = "afl++lto" && { 
@@ -57,16 +58,16 @@ test "$FUZZER" = "afl++lto" && {
   export AFL_LLVM_CMPLOG=1
   export AFL_LLVM_DICT2FILE=`pwd`/afl++.dic
   export CMPLOG_LVL=3ATX
-  export FUZZER_OPTIONS="-Z"
+  export FUZZER_OPTIONS="-Z -c0"
   export FUZZER=afl++
   DONE=1
 }
 test "$FUZZER" = "afl++-qemu" -o "$FUZZER" = "afl++-frida" && { 
   export CC=clang
   export CXX=clang++
-  export CFLAGS=-D__AFL_COMPILER=1
+  export CFLAGS=-D__NEED_MAIN=1
   export CMPLOG_LVL=3ATX
-  export FUZZER_OPTIONS="-Z"
+  export FUZZER_OPTIONS="-Z -c0"
   DONE=1
 }
 test "$FUZZER" = "afl++-symsan" && {
@@ -76,7 +77,7 @@ test "$FUZZER" = "afl++-symsan" && {
   fi
   export CC=afl-clang-fast
   export CXX=afl-clang-fast++
-  export CFLAGS=-D__AFL_COMPILER=1
+  export CFLAGS=-D__NEED_MAIN=1
   export AFL_LLVM_CMPLOG=
   export AFL_DISABLE_TRIM=1
   export AFL_CUSTOM_MUTATOR_LIBRARY="$SYMSAN_PATH/bin/libSymSanMutator.so"
@@ -133,8 +134,8 @@ make clean >/dev/null 2>&1
 test "$FUZZER" = "afl++-symsan" && {
   FILES="$2"
   test -z "$FILES" && FILES=`ls test-*.c|sed 's/\.c//'`
-  test -z "$2" && { make CC="$SYMSAN_PATH/bin/ko-clang" CFLAGS="-g -D__AFL_COMPILER=1" compile || exit 1; }
-  test -n "$2" && { make CC="$SYMSAN_PATH/bin/ko-clang" CFLAGS="-g -D__AFL_COMPILER=1" "$2" || exit 1; }
+  test -z "$2" && { make CC="$SYMSAN_PATH/bin/ko-clang" CFLAGS="-g -D__NEED_MAIN=1" compile || exit 1; }
+  test -n "$2" && { make CC="$SYMSAN_PATH/bin/ko-clang" CFLAGS="-g -D__NEED_MAIN=1" "$2" || exit 1; }
   for i in $FILES; do
     test -x $i && mv $i $i.fg
   done

@@ -9,7 +9,7 @@ test -f fuzzolic/fuzzolic.py || { echo Error: use the fuzzolic dockerfile and ex
 clang-12 -v || { apt update -y; apt install -y clang-12; }
 
 make -C /share clean
-make CC=clang-12 CFLAGS="-g -D__AFL_COMPILER=1" -C /share compile
+make CC=clang-12 CFLAGS="-g -D__NEED_MAIN=1" -C /share compile
 ulimit -c unlimited
 
 rm -rf in

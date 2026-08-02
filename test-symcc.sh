@@ -8,11 +8,11 @@ FILES=`ls test-*.c|sed 's/\.c//'`
 export PATH=$PATH:/symcc:/symcc_build
 
 make clean
-make CC=cc CFLAGS="-g -D__AFL_COMPILER=1" compile
+make CC=cc CFLAGS="-g -D__NEED_MAIN=1" compile
 for i in $FILES; do
   test -x $i && mv $i $i.plain
 done
-make CC=symcc CFLAGS="-g -D__AFL_COMPILER=1" compile
+make CC=symcc CFLAGS="-g -D__NEED_MAIN=1" compile
 export SYMCC_OUTPUT_DIR=`pwd`/out
 
 for j in $FILES; do

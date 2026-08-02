@@ -4,7 +4,7 @@
 # Setup for TritonDSE
 #
 make clean
-make CC=clang CFLAGS="-g -D__AFL_COMPILER=1" compile
+make CC=clang CFLAGS="-g -D__NEED_MAIN=1" compile
 ulimit -c unlimited
 
 # removed longdouble - takes forever

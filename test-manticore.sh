@@ -5,7 +5,7 @@
 #
 make clean
 echo Warning: needs musl-gcc, otherwise manticore cant decode
-make CC=musl-gcc CFLAGS="-static -O0 -g -D__AFL_COMPILER=1" compile
+make CC=musl-gcc CFLAGS="-static -O0 -g -D__NEED_MAIN=1" compile
 
 # removed longdouble - takes forever
 for j in test-crc32 test-transform test-u32 test-u8 test-double test-memcmp test-u128 test-u32-cmp test-float test-strcmp test-u16 test-u64; do

@@ -45,7 +45,7 @@ int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
 }
 
-#ifdef __AFL_COMPILER
+#ifdef __NEED_MAIN
 int main(int argc, char **argv) {
 
   unsigned char buf[128];
